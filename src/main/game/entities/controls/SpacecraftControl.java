@@ -33,6 +33,18 @@ public abstract class SpacecraftControl extends RigidBodyControl implements Cont
 	public abstract void primaryShoot();
 	public abstract void secondShoot();
 
+	//see https://de.wikipedia.org/wiki/Kugelkoordinaten
+	//the "O" ist rotY, the phy/phi, rotY
+	//this function should be used by *Rotation
+	//
+	private void changeDirection(float rotX, float rotY) {
+		float X, Y, Z;
+
+	    X = Math.sin(rotX) * Math.cos(rotY);
+	    Y = Math.sin(rotX) * Math.sin(rotY);
+    	Z = Math.cos(rotX);
+	}
+
 	@Override
 	public void update(float tpf) {
 	}
