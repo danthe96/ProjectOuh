@@ -3,7 +3,6 @@ package main.game;
 import main.Settings;
 
 import com.jme3.app.SimpleApplication;
-import com.jme3.math.Vector3f;
 import com.jme3.util.SkyFactory;
 
 public class Core extends SimpleApplication {
