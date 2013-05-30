@@ -1,0 +1,5 @@
+#Controls
+Up=100
+Down=101
+Right=102
+Left=103
