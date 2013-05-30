@@ -50,10 +50,8 @@ public class Settings {
 			scanner.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-			try {
-				new File("settings.txt").createNewFile();
-			} catch (IOException e1) {
-			}
+			settingsmap.putAll(StandardSettings.get());
+			writeHashMaptoFile(settingsmap, "settings.txt");
 		}
 
 	}
@@ -65,18 +63,22 @@ public class Settings {
 		settingsmap.putAll(settingsbackup);
 		settingsbackup.clear();
 		new File("settings.txt").delete();
+		
+		writeHashMaptoFile(settingsmap,"settings.txt");
+		
+	}
 
+	private void writeHashMaptoFile(HashMap<String,String> map, String filepath) {
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
-					"settings.txt")));
-			String txtcontent = settingsmap.toString().replace("{", "")
+					filepath)));
+			String txtcontent = map.toString().replace("{", "")
 					.replace("}", "").replace(",", "\n");
 			writer.write(txtcontent);
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 }
