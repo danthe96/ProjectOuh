@@ -2,30 +2,35 @@ package main.game.entities.controls;
 
 public class ReaperControl extends SpacecraftControl {
 
+
+	private static final double SENSITIVITY_X = 1;
+	private static final double SENSITIVITY_Y = 1;
+	private static final double REAPER_MULTIPLYIER = 1;
+
 	// TODO replace REAPER_MULTIPLYIER SENSITIVITY_* with the correct settings
 	//SENSITIVITY_Y
 	//SENSITIVITY_X
 	@Override
 	public void leftRotation() {
-		changeDirection(REAPER_MULTIPLYIER*(-1)*SENSITIVITY_Y);
+		changeDirection(0d, REAPER_MULTIPLYIER*(-1)*SENSITIVITY_Y);
 		
 	}
 
 	@Override
 	public void rightRotation() {
-		changeDirection(REAPER_MULTIPLYIER*SENSITIVITY_Y)
+		changeDirection(0d, REAPER_MULTIPLYIER*SENSITIVITY_Y);
 		
 	}
 
 	@Override
 	public void upRotation() {
-		changeDirection(REAPER_MULTIPLYIER*(-1)*SENSITIVITY_X);
+		changeDirection(REAPER_MULTIPLYIER*(-1)*SENSITIVITY_X, 0d);
 		
 	}
 
 	@Override
 	public void downRotation() {
-		changeDirection(REAPER_MULTIPLYIER*SENSITIVITY_X)
+		changeDirection(REAPER_MULTIPLYIER*SENSITIVITY_X, 0d);
 		
 	}
 
