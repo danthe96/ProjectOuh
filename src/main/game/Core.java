@@ -17,8 +17,7 @@ public class Core extends SimpleApplication {
 	public void simpleInitApp() {
 		Settings settings = new Settings();
 		rootNode.attachChild(SkyFactory.createSky(assetManager,
-				"assets/Textures/OutputCube.dds", false));
-		Vector3f vec;
+				"assets/Textures/OutputCube2.dds", false));
 	}
 
 }
