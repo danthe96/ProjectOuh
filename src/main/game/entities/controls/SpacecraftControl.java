@@ -40,6 +40,9 @@ public abstract class SpacecraftControl extends RigidBodyControl implements Cont
 	protected void changeDirection(double rotX, double rotY) {
 		double X, Y, Z;
 
+		rotX *= 100/getMass();
+		rotY *= 100/getMass();
+
 	    X = Math.sin(rotX) * Math.cos(rotY);
 	    Y = Math.sin(rotX) * Math.sin(rotY);
     	Z = Math.cos(rotX);
