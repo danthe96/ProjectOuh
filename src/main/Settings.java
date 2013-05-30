@@ -49,7 +49,6 @@ public class Settings {
 			}
 			scanner.close();
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 			settingsmap.putAll(StandardSettings.get());
 			writeHashMaptoFile(settingsmap, "settings.txt");
 		}
