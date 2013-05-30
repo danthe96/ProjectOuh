@@ -1,7 +1,6 @@
 package main.game.entities.controls;
 
 public class ReaperControl extends SpacecraftControl {
-	changeDirection(float rotX, float rotY)
 
 	// TODO replace REAPER_MULTIPLYIER SENSITIVITY_* with the correct settings
 	//SENSITIVITY_Y
