@@ -15,57 +15,52 @@ public class ReaperControl extends SpacecraftControl {
 		// TODO Auto-generated constructor stub
 	}
 
-	private static final float SENSITIVITY_X = 3;
-	private static final float SENSITIVITY_Y = 3;
+	private static final float SENSITIVITY_X = 30f;
+	private static final float SENSITIVITY_Y = 30f;
 	private float velocity = 2;
 	private float currentspeed = 0;
 
 	@Override
-	public void leftRotation() {
-		System.out.println("haha");
+	public void leftRotation(float value) {
 		Quaternion oldOne=new Quaternion();
 		getPhysicsRotation(oldOne);
-		Quaternion toRotate=new Quaternion(0, 0, 1, SENSITIVITY_X);
+		Quaternion toRotate=new Quaternion(1, 0, value, SENSITIVITY_X);
 		setPhysicsRotation(oldOne.mult(toRotate));
 	}
 
 	@Override
-	public void rightRotation() {
+	public void rightRotation(float value) {
 		Quaternion oldOne=new Quaternion();
 		getPhysicsRotation(oldOne);
-		Quaternion toRotate=new Quaternion(0, 0, 1, -SENSITIVITY_X);
+		Quaternion toRotate=new Quaternion(1, 0, value, -SENSITIVITY_X);
 		setPhysicsRotation(oldOne.mult(toRotate));
 	}
 
 	@Override
-	public void upRotation() {
+	public void upRotation(float value) {
 		Quaternion oldOne=new Quaternion();
 		getPhysicsRotation(oldOne);
-		Quaternion toRotate=new Quaternion(0, 1, 0, SENSITIVITY_Y);
+		Quaternion toRotate=new Quaternion(0, value, 1, SENSITIVITY_Y);
 		setPhysicsRotation(oldOne.mult(toRotate));
 	}
 
 	@Override
-	public void downRotation() {
-		System.out.println("haha");
+	public void downRotation(float value) {
 		Quaternion oldOne=new Quaternion();
 		getPhysicsRotation(oldOne);
-		Quaternion toRotate=new Quaternion(0, 1, 0, -SENSITIVITY_Y);
+		Quaternion toRotate=new Quaternion(0, value, 1, -SENSITIVITY_Y);
 		setPhysicsRotation(oldOne.mult(toRotate));
 	}
 
 	@Override
 	public void accelerate() {
-		System.out.println("accelerate");
 		currentspeed+=velocity;
-		System.out.println(currentspeed);
 		setLinearVelocity(spatial.getLocalRotation().getRotationColumn(0).mult(+currentspeed));
 
 	}
 
 	@Override
 	public void decelerate() {
-		System.out.println("decelerate");
 		currentspeed-=velocity;
 		setLinearVelocity(spatial.getLocalRotation().getRotationColumn(0).mult(-currentspeed));
 

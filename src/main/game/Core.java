@@ -11,6 +11,7 @@ import main.game.entities.userinput.ReaperListener;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
+import com.jme3.input.ChaseCamera;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseAxisTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
@@ -49,6 +50,9 @@ public class Core extends SimpleApplication {
 		bulletAppState.getPhysicsSpace().add(space);
 		rootNode.attachChild(blue);
 
+		ChaseCamera chaseCam = new ChaseCamera(cam, blue);
+		blue.addControl(chaseCam);
+		
 		flyCam.setEnabled(false);
 		ReaperListener.spacecraft = space;
 		initKeys();

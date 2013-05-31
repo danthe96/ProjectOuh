@@ -26,16 +26,16 @@ public class ReaperListener extends SpacecraftListener {
 	public AnalogListener analogListener = new AnalogListener() {
 		public void onAnalog(String name, float value, float tpf) {
 				if(name.equals("ROTATE_RIGHT") && value > 0){
-					spacecraft.rightRotation();
+					spacecraft.rightRotation(value);
 				}
 				else if(name.equals("ROTATE_LEFT") && value > 0){
-					spacecraft.leftRotation();
+					spacecraft.leftRotation(value);
 				}
 				else if(name.equals("STEER_UP") && value > 0){
-					spacecraft.upRotation();
+					spacecraft.upRotation(value);
 				}
 				else if (name.equals("STEER_DOWN") && value > 0){
-					spacecraft.downRotation();
+					spacecraft.downRotation(value);
 				}
 			}
 	};

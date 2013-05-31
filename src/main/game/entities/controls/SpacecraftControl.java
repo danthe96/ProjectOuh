@@ -19,30 +19,16 @@ public abstract class SpacecraftControl extends RigidBodyControl
 		super(mass);
 	}
 
-	public abstract void leftRotation();
-	public abstract void rightRotation();
-	public abstract void upRotation();
-	public abstract void downRotation();
+	public abstract void leftRotation(float value);
+	public abstract void rightRotation(float value);
+	public abstract void upRotation(float value);
+	public abstract void downRotation(float value);
 	public abstract void accelerate();
 	public abstract void decelerate();
 	public abstract void land();
 	public abstract void lift();
 	public abstract void primaryShoot();
 	public abstract void secondShoot();
-
-	// see https://de.wikipedia.org/wiki/Kugelkoordinaten
-	// the "O" ist rotY, the phy/phi, rotY
-	// this function should be used by *Rotation
-	protected void changeDirection(double rotX, double rotY) {
-		double X, Y, Z;
-
-		rotX *= 100 / getMass();
-		rotY *= 100 / getMass();
-
-		X = Math.sin(rotX) * Math.cos(rotY);
-		Y = Math.sin(rotX) * Math.sin(rotY);
-		Z = Math.cos(rotX);
-	}
 
 	@Override
 	public void update(float tpf) {
