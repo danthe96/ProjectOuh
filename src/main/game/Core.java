@@ -1,5 +1,9 @@
 package main.game;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import main.Settings;
 import main.game.entities.controls.ReaperControl;
 import main.game.entities.controls.SpacecraftControl;
@@ -7,10 +11,9 @@ import main.game.entities.userinput.ReaperListener;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
-import com.jme3.input.KeyInput;
-import com.jme3.input.MouseInput;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseAxisTrigger;
+import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
@@ -46,30 +49,38 @@ public class Core extends SimpleApplication {
 		bulletAppState.getPhysicsSpace().add(space);
 		rootNode.attachChild(blue);
 
+		flyCam.setEnabled(false);
 		ReaperListener.spacecraft = space;
 		initKeys();
 	}
 
 	private void initKeys() {
 		inputManager.clearMappings();
-		flyCam.setEnabled(false);
-		/* HashMap<String,String> reaperControls =
-		// settings.getSettingsMap("ReaperControls");
-		// for(String key: reaperControls.keySet()){
-		// inputManager.addMapping(key, new
-		// KeyTrigger(Integer.parseInt(reaperControls.get(key))));
-		 }*/
-		inputManager.addMapping("ACCELERATE", new KeyTrigger(KeyInput.KEY_W));
-		inputManager.addMapping("DECELERATE", new KeyTrigger(KeyInput.KEY_S));
-		inputManager.addMapping("RIGHT", new KeyTrigger(KeyInput.KEY_D));
-		inputManager.addMapping("LEFT", new KeyTrigger(KeyInput.KEY_A));
-		inputManager.addMapping("ROTATE_RIGHT", new MouseAxisTrigger(MouseInput.AXIS_X, true));
-		inputManager.addMapping("ROTATE_LEFT", new MouseAxisTrigger(MouseInput.AXIS_X, false));
-		inputManager.addMapping("STEER_UP", new MouseAxisTrigger(MouseInput.AXIS_Y,	false));
-		inputManager.addMapping("STEER_DOWN", new MouseAxisTrigger(MouseInput.AXIS_Y, true));
-		ReaperListener reaperListener = new ReaperListener();
-		inputManager.addListener(reaperListener.actionListener, "ACCELERATE","DECELERATE", "RIGHT", "LEFT");
-		inputManager.addListener(reaperListener.analogListener, "ROTATE_LEFT","ROTATE_RIGHT", "STEER_UP", "STEER_DOWN");
+
+		HashMap<String, String> reaperControls = settings.getSettingsMap("ReaperControls");
+		List<String> actionKey = new ArrayList<String>();
+		List<String> analogKey = new ArrayList<String>();
+		for (String key : reaperControls.keySet()) {
+			String binding = reaperControls.get(key);
+			if (binding.charAt(0) == 'k') {
+				inputManager.addMapping(key, new KeyTrigger(Integer.parseInt(binding.substring(1))));
+				actionKey.add(key);
+			} else if (binding.charAt(0) == 'a') {
+				if(binding.charAt(1) == 't')
+					inputManager.addMapping(key, new MouseAxisTrigger(Integer.parseInt(binding.substring(2)),true));
+				if(binding.charAt(1) == 'f')
+					inputManager.addMapping(key, new MouseAxisTrigger(Integer.parseInt(binding.substring(2)),false));
+				analogKey.add(key);
+			} else if (binding.charAt(0) == 'm') {
+				inputManager.addMapping(key, new MouseButtonTrigger(Integer.parseInt(binding.substring(1))));
+				actionKey.add(key);
+			}
+		}
+
+		ReaperListener reaperListener = new ReaperListener();//Temporarily an object, maybe it will changed to static again 
+		inputManager.addListener(reaperListener.actionListener,  actionKey.toArray(new String[0]));
+
+		inputManager.addListener(reaperListener.analogListener, analogKey.toArray(new String[0]));
 
 	}
 
