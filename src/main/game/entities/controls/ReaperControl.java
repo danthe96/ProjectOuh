@@ -19,35 +19,32 @@ public class ReaperControl extends SpacecraftControl {
 
 	private static final float SENSITIVITY_X = 3;
 	private static final float SENSITIVITY_Y = 3;
-	private float velocity = 1;
+	private float velocity = 1000000;
 	private float currentspeed=0;
 
-	// TODO replace REAPER_MULTIPLYIER SENSITIVITY_* with the correct settings
-	// SENSITIVITY_Y
-	// SENSITIVITY_X
 	@Override
 	public void leftRotation() {
+		System.out.println("haha");
 		Quaternion q=new Quaternion(0, 0, 1, SENSITIVITY_X); 
 		setPhysicsRotation(q);
 	}
 
 	@Override
 	public void rightRotation() {
-//		changeDirection(0d, SENSITIVITY_Y);
 		Quaternion q=new Quaternion(0, 0, 1, -SENSITIVITY_X); 
 		setPhysicsRotation(q);
 	}
 
 	@Override
 	public void upRotation() {
-//		changeDirection((-1) * SENSITIVITY_X, 0d);
+		System.out.println("haha");
 		Quaternion q=new Quaternion(1, 0, 0, SENSITIVITY_Y); 
 		setPhysicsRotation(q);
 	}
 
 	@Override
 	public void downRotation() {
-//		changeDirection(SENSITIVITY_X, 0d);
+		System.out.println("haha");
 		Quaternion q=new Quaternion(1, 0, 0, -SENSITIVITY_Y); 
 		setPhysicsRotation(q);
 
@@ -55,15 +52,18 @@ public class ReaperControl extends SpacecraftControl {
 
 	@Override
 	public void accelerate() {
+		System.out.println("accelerate");
 		currentspeed+=velocity;
-		setLinearVelocity(spatial.getLocalRotation().getRotationColumn(0).mult(currentspeed));
+		System.out.println(currentspeed);
+		setLinearVelocity(spatial.getLocalRotation().getRotationColumn(0).mult(+currentspeed));
 
 	}
 
 	@Override
 	public void decelerate() {
+		System.out.println("decelerate");
 		currentspeed-=velocity;
-		setLinearVelocity(spatial.getLocalRotation().getRotationColumn(0).mult(currentspeed));
+		setLinearVelocity(spatial.getLocalRotation().getRotationColumn(0).mult(-currentspeed));
 
 	}
 
