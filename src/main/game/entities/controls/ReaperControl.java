@@ -25,10 +25,10 @@ public class ReaperControl extends SpacecraftControl {
 	@Override
 	public void leftRotation() {
 		System.out.println("haha");
-		Quaternion oldOne=new Quaternion(0, 0, 0, 0); ;
+		Quaternion oldOne=new Quaternion();
 		getPhysicsRotation(oldOne);
-		Quaternion q=new Quaternion(0, 0, 1, SENSITIVITY_X); 
-		setPhysicsRotation(q);
+		oldOne.fromAngles({0, 0, SENSITIVITY_X});
+		setPhysicsRotation(oldOne);
 	}
 
 	@Override
