@@ -19,6 +19,8 @@ public class ReaperControl extends SpacecraftControl {
 	private static final float SENSITIVITY_Y = 100f;
 	private float velocity = 2;
 	private float currentspeed = 0;
+	private boolean accelerating = false;
+	private boolean decelerating = false;
 
 	@Override
 	public void leftRotation(float value) {
@@ -58,15 +60,17 @@ public class ReaperControl extends SpacecraftControl {
 
 	@Override
 	public void accelerate() {
-		currentspeed+=velocity;
-		setLinearVelocity(spatial.getLocalRotation().getRotationColumn(0).mult(+currentspeed));
+		accelerating=!accelerating;
+		//currentspeed+=velocity;
+		//setLinearVelocity(spatial.getLocalRotation().getRotationColumn(0).mult(+currentspeed));
 
 	}
 
 	@Override
 	public void decelerate() {
-		currentspeed-=velocity;
-		setLinearVelocity(spatial.getLocalRotation().getRotationColumn(0).mult(-currentspeed));
+		decelerating=!decelerating;
+//	currentspeed-=velocity;
+//	setLinearVelocity(spatial.getLocalRotation().getRotationColumn(0).mult(-currentspeed));
 
 	}
 
@@ -94,7 +98,18 @@ public class ReaperControl extends SpacecraftControl {
 	
 	@Override
 	public void update(float tpf){
-		super.update(tpf);		
+		
+		if (accelerating && (currentspeed <= 20)) {
+			currentspeed+=velocity/1000;
+			System.out.println("accelerating "+currentspeed);
+		}
+		if (decelerating && (currentspeed >= -20)) {
+			currentspeed-=velocity/1000;
+			System.out.println("decelerating "+currentspeed);
+		}
+		setLinearVelocity(spatial.getLocalRotation().getRotationColumn(2).mult(+currentspeed));
+		super.update(tpf);
+
 	}
 
 }

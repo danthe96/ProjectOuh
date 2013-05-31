@@ -40,11 +40,13 @@ public class Core extends SimpleApplication {
 
 	@Override
 	public void simpleUpdate(float tpf) {
+		inputManager.setCursorVisible(false);//not mouse
 	
 		cam.setLocation(character.getLocalTranslation());
 		cam.setRotation(character.getLocalRotation());
 	
-	
+		
+
 //		if(Cam!=null&&character!=null){
 //			Vector3f v = new Vector3f(0, 10 , 10);
 //			character.localToWorld( v, v);
@@ -61,6 +63,19 @@ public class Core extends SimpleApplication {
 		rootNode.attachChild(SkyFactory.createSky(assetManager,
 				"assets/Textures/OutputCube2.dds", false));
 
+		initSpacials();
+		
+		inputManager.setCursorVisible(false);//not mouse
+
+		//ChaseCamera chaseCam = new ChaseCamera(cam, blue);
+//		Cam = new Camera();
+
+		flyCam.setEnabled(false);
+		
+		initKeys();
+	}
+
+	private void initSpacials() {
 		Box box1 = new Box(Vector3f.ZERO, 1, 1, 1);
 		Box boxstatic = new Box(Vector3f.ZERO, 5, 1, 1);
 		Geometry blue = new Geometry("Box", box1);
@@ -75,18 +90,13 @@ public class Core extends SimpleApplication {
 		blue2.setMaterial(mat2);
 		SpacecraftControl space = new ReaperControl(blue, 6);
 		blue.addControl(space);
-		//bulletAppState.getPhysicsSpace().add(space);
+		space.setGravity(new Vector3f(0f, 0f, 0.0001f));
+		bulletAppState.getPhysicsSpace().add(space);
+		ReaperListener.spacecraft = space;
 		rootNode.attachChild(blue);
 		rootNode.attachChild(blue2);
 
 		character = blue;
-
-		//ChaseCamera chaseCam = new ChaseCamera(cam, blue);
-//		Cam = new Camera();
-
-		flyCam.setEnabled(false);
-		ReaperListener.spacecraft = space;
-		initKeys();
 	}
 
 	private void initKeys() {
