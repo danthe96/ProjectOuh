@@ -25,7 +25,7 @@ public class ReaperControl extends SpacecraftControl {
 		Quaternion oldOne=new Quaternion();
 		getPhysicsRotation(oldOne);
 		float multiplier=value*mass;
-		Quaternion toRotate=new Quaternion(1, 0, multiplier, SENSITIVITY_X);
+		Quaternion toRotate=new Quaternion(0, multiplier, 1, SENSITIVITY_Y);
 		setPhysicsRotation(oldOne.mult(toRotate));
 	}
 
@@ -34,7 +34,7 @@ public class ReaperControl extends SpacecraftControl {
 		Quaternion oldOne=new Quaternion();
 		getPhysicsRotation(oldOne);
 		float multiplier=value*mass;
-		Quaternion toRotate=new Quaternion(1, 0, multiplier, -SENSITIVITY_X);
+		Quaternion toRotate=new Quaternion(0, multiplier, 1, -SENSITIVITY_Y);
 		setPhysicsRotation(oldOne.mult(toRotate));
 	}
 
@@ -43,7 +43,7 @@ public class ReaperControl extends SpacecraftControl {
 		Quaternion oldOne=new Quaternion();
 		getPhysicsRotation(oldOne);
 		float multiplier=value*mass;
-		Quaternion toRotate=new Quaternion(0, multiplier, 1, SENSITIVITY_Y);
+		Quaternion toRotate=new Quaternion(1, 0, multiplier, SENSITIVITY_X);
 		setPhysicsRotation(oldOne.mult(toRotate));
 	}
 
@@ -52,7 +52,7 @@ public class ReaperControl extends SpacecraftControl {
 		Quaternion oldOne=new Quaternion();
 		getPhysicsRotation(oldOne);
 		float multiplier=value*mass;
-		Quaternion toRotate=new Quaternion(0, multiplier, 1, -SENSITIVITY_Y);
+		Quaternion toRotate=new Quaternion(1, 0, multiplier, -SENSITIVITY_X);
 		setPhysicsRotation(oldOne.mult(toRotate));
 	}
 

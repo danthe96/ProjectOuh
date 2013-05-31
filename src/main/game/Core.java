@@ -18,7 +18,9 @@ import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.Camera;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.jme3.util.SkyFactory;
 
@@ -26,9 +28,29 @@ public class Core extends SimpleApplication {
 	private Settings settings;
 	private BulletAppState bulletAppState;
 
+	//this is the body/machine, where you are inside, which you are playing
+	private Spatial character;
+
+	//the cam "inside" the Charachter (see simpleUpdate)
+
 	public static void main(String[] args) {
 		Core coreapp = new Core();
 		coreapp.start();
+	}
+
+	@Override
+	public void simpleUpdate(float tpf) {
+	
+		cam.setLocation(character.getLocalTranslation());
+		cam.setRotation(character.getLocalRotation());
+	
+	
+//		if(Cam!=null&&character!=null){
+//			Vector3f v = new Vector3f(0, 10 , 10);
+//			character.localToWorld( v, v);
+//			Cam.setLocation(v);
+//			Cam.lookAt(character.getWorldTranslation(), Vector3f.UNIT_Y);
+//		}
 	}
 
 	@Override
@@ -57,8 +79,11 @@ public class Core extends SimpleApplication {
 		rootNode.attachChild(blue);
 		rootNode.attachChild(blue2);
 
-		ChaseCamera chaseCam = new ChaseCamera(cam, blue);
-		
+		character = blue;
+
+		//ChaseCamera chaseCam = new ChaseCamera(cam, blue);
+//		Cam = new Camera();
+
 		flyCam.setEnabled(false);
 		ReaperListener.spacecraft = space;
 		initKeys();
