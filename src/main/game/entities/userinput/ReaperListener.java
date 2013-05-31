@@ -9,22 +9,12 @@ public class ReaperListener extends SpacecraftListener {
 
 	public static ActionListener actionListener = new ActionListener() {
 		public void onAction(String name, boolean keyPressed, float tpf) {
-			switch (name){
-			case "ACCELERATE":
+			if(name.equals("ACCELERATE")&&keyPressed)
 				spacecraft.accelerate();
-				break;
-			case "DECELERATE":
+			else if(name.equals("DECELERATE")&&keyPressed)
 				spacecraft.decelerate();
-				break;
-			case "RIGHT":
-				//
-				break;
-			case "LEFT":
-				//
-				break;
-
-			}
-
+			else if(name.equals("RIGHT")&&keyPressed);
+			else if(name.equals("LEFT")&&keyPressed);
 		}
 	};
 

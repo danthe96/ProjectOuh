@@ -48,12 +48,12 @@ public class Core extends SimpleApplication {
 	private void initKeys() {
 		inputManager.clearMappings();
 		flyCam.setEnabled(false);
-		// HashMap<String,String> reaperControls =
+		/* HashMap<String,String> reaperControls =
 		// settings.getSettingsMap("ReaperControls");
 		// for(String key: reaperControls.keySet()){
 		// inputManager.addMapping(key, new
 		// KeyTrigger(Integer.parseInt(reaperControls.get(key))));
-		// }
+		 }*/
 		inputManager.addMapping("ACCELERATE", new KeyTrigger(KeyInput.KEY_W));
 		inputManager.addMapping("DECELERATE", new KeyTrigger(KeyInput.KEY_S));
 		inputManager.addMapping("RIGHT", new KeyTrigger(KeyInput.KEY_D));
