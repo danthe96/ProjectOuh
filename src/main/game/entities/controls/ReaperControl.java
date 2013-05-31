@@ -19,7 +19,7 @@ public class ReaperControl extends SpacecraftControl {
 
 	private static final float SENSITIVITY_X = 3;
 	private static final float SENSITIVITY_Y = 3;
-	private float velocity = 1000000;
+	private float velocity = 2;
 	private float currentspeed=0;
 
 	@Override
