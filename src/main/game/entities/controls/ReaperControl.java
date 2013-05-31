@@ -20,11 +20,13 @@ public class ReaperControl extends SpacecraftControl {
 	private static final float SENSITIVITY_X = 3;
 	private static final float SENSITIVITY_Y = 3;
 	private float velocity = 2;
-	private float currentspeed=0;
+	private float currentspeed = 0;
 
 	@Override
 	public void leftRotation() {
 		System.out.println("haha");
+		Quaternion oldOne=new Quaternion(0, 0, 0, 0); ;
+		getPhysicsRotation(oldOne);
 		Quaternion q=new Quaternion(0, 0, 1, SENSITIVITY_X); 
 		setPhysicsRotation(q);
 	}
