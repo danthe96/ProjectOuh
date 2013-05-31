@@ -15,8 +15,8 @@ public class ReaperControl extends SpacecraftControl {
 		// TODO Auto-generated constructor stub
 	}
 
-	private static final float SENSITIVITY_X = 30f;
-	private static final float SENSITIVITY_Y = 30f;
+	private static final float SENSITIVITY_X = 5f;
+	private static final float SENSITIVITY_Y = 5f;
 	private float velocity = 2;
 	private float currentspeed = 0;
 
