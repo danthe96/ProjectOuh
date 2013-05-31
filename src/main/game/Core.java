@@ -67,8 +67,9 @@ public class Core extends SimpleApplication {
 		inputManager.addMapping("ROTATE_LEFT", new MouseAxisTrigger(MouseInput.AXIS_X, false));
 		inputManager.addMapping("STEER_UP", new MouseAxisTrigger(MouseInput.AXIS_Y,	false));
 		inputManager.addMapping("STEER_DOWN", new MouseAxisTrigger(MouseInput.AXIS_Y, true));
-		inputManager.addListener(ReaperListener.actionListener, "ACCELERATE","DECELERATE", "RIGHT", "LEFT");
-		inputManager.addListener(ReaperListener.analogListener, "ROTATE_LEFT","ROTATE_RIGHT", "STEER_UP", "STEER_DOWN");
+		ReaperListener reaperListener = new ReaperListener();
+		inputManager.addListener(reaperListener.actionListener, "ACCELERATE","DECELERATE", "RIGHT", "LEFT");
+		inputManager.addListener(reaperListener.analogListener, "ROTATE_LEFT","ROTATE_RIGHT", "STEER_UP", "STEER_DOWN");
 
 	}
 
