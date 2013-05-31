@@ -40,18 +40,24 @@ public class Core extends SimpleApplication {
 				"assets/Textures/OutputCube2.dds", false));
 
 		Box box1 = new Box(Vector3f.ZERO, 1, 1, 1);
+		Box boxstatic = new Box(Vector3f.ZERO, 5, 1, 1);
 		Geometry blue = new Geometry("Box", box1);
+		Geometry blue2 = new Geometry("Box2", boxstatic);
 		Material mat1 = new Material(assetManager,
 				"Common/MatDefs/Misc/Unshaded.j3md");
+		Material mat2 = new Material(assetManager,
+				"Common/MatDefs/Misc/Unshaded.j3md");
 		mat1.setColor("Color", ColorRGBA.Blue);
+		mat2.setColor("Color", ColorRGBA.Green);
 		blue.setMaterial(mat1);
+		blue2.setMaterial(mat2);
 		SpacecraftControl space = new ReaperControl(blue, 6);
 		blue.addControl(space);
-		bulletAppState.getPhysicsSpace().add(space);
+		//bulletAppState.getPhysicsSpace().add(space);
 		rootNode.attachChild(blue);
+		rootNode.attachChild(blue2);
 
 		ChaseCamera chaseCam = new ChaseCamera(cam, blue);
-		blue.addControl(chaseCam);
 		
 		flyCam.setEnabled(false);
 		ReaperListener.spacecraft = space;
