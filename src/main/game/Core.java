@@ -78,9 +78,9 @@ public class Core extends SimpleApplication {
 		}
 
 		ReaperListener reaperListener = new ReaperListener();//Temporarily an object, maybe it will changed to static again 
-		inputManager.addListener(reaperListener.actionListener,  actionKey.toArray(new String[0]));
+		inputManager.addListener(reaperListener.actionListener,  actionKey.toArray(new String[actionKey.size()]));
 
-		inputManager.addListener(reaperListener.analogListener, analogKey.toArray(new String[0]));
+		inputManager.addListener(reaperListener.analogListener, analogKey.toArray(new String[actionKey.size()]));
 
 	}
 
