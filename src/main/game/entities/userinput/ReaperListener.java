@@ -1,17 +1,13 @@
-package main.game;
-
-import main.game.entities.Spacecraft;
-import main.game.entities.controls.SpacecraftControl;
+package main.game.entities.userinput;
 
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
 
 
 
-public class ReaperListener {
+public class ReaperListener extends SpacecraftListener {
 
-
-	static ActionListener actionListener = new ActionListener() {
+	public static ActionListener actionListener = new ActionListener() {
 		public void onAction(String name, boolean keyPressed, float tpf) {
 			switch (name){
 			case "ACCELERATE":
@@ -32,7 +28,7 @@ public class ReaperListener {
 		}
 	};
 
-	static AnalogListener analogListener = new AnalogListener() {
+	public static AnalogListener analogListener = new AnalogListener() {
 		public void onAnalog(String name, float value, float tpf) {
 			switch(name){
 			case "ROTATE_RIGHT":
