@@ -13,10 +13,10 @@ public class StandardSettings {
 		map = new HashMap<String,HashMap<String,String>>();
 		
 		HashMap<String,String> reaperControls = new HashMap<String,String>();
-		reaperControls.put("ACCELERATE", "" + KeyInput.KEY_W);
-		reaperControls.put("DECELERATE", "" + KeyInput.KEY_S);
-		reaperControls.put("RIGHT", "" + KeyInput.KEY_D);
-		reaperControls.put("LEFT", "" + KeyInput.KEY_A);
+		reaperControls.put("ACCELERATE", "" + KeyInput.KEY_F15);
+		reaperControls.put("DECELERATE", "" + KeyInput.KEY_APOSTROPHE);
+		reaperControls.put("RIGHT", "" + KeyInput.KEY_ESCAPE);
+		reaperControls.put("LEFT", "" + KeyInput.KEY_0);
 		reaperControls.put("ROTATE_RIGHT", "" + MouseInput.AXIS_X);
 		reaperControls.put("ROTATE_LEFT", "" + MouseInput.AXIS_X);
 		reaperControls.put("STEER_UP", "" + MouseInput.AXIS_Y);

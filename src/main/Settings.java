@@ -18,6 +18,8 @@ public class Settings {
 	private HashMap<String, HashMap<String, String>> settingsbackup;
 	// backup used before executing applySettings()
 
+	// We use a HashMap inside a HashMap to establish different categories
+
 	public Settings() {
 		appsettings = new AppSettings(true);
 		settingsmap = new HashMap<String, HashMap<String, String>>();
@@ -38,36 +40,11 @@ public class Settings {
 		temp_settingsbackup.put(key, value);
 		settingsbackup.put(category, temp_settingsbackup);
 	}
-
-	private void readSettings() { // Reading settings from settings file
-		try {
-			Scanner scanner = new Scanner(new File("settings.txt"));
-			while (scanner.hasNext()) {
-				String option = scanner.nextLine();
-				if (!option.equals("") && option.trim().charAt(0) == '#') {
-					String category = option.trim().replace("#", "");
-					HashMap<String, String> tempmap = new HashMap<String, String>();
-					do {
-						option = scanner.nextLine();
-						if (option.trim().charAt(0) != '#' && scanner.hasNext()) {
-							String[] splitstring = option.split("=");
-							tempmap.put(splitstring[0], splitstring[1]);
-						}
-					} while (option.trim().charAt(0) != '#' && scanner.hasNext());
-					settingsmap.put(category, tempmap);
-				}
-			}
-			scanner.close();
-		} catch (FileNotFoundException e) {
-			settingsmap.putAll(StandardSettings.get());
-			writeHashMapHashMaptoFile(settingsmap, "settings.txt");
-		}
-
-		for (String category : settingsmap.keySet())
-			System.out.println(settingsmap.get(category).toString());
-
+	
+	public HashMap<String,String> getSettingsMap(String category){
+		return settingsmap.get(category);
 	}
-
+	
 	// applying settings to both the currently used
 	// data and the text file, method has to be
 	// called manually after setting something
@@ -81,6 +58,34 @@ public class Settings {
 
 	}
 
+	private void readSettings() { // Reading settings from settings file
+		try {
+			Scanner scanner = new Scanner(new File("settings.txt"));
+			String option = scanner.nextLine().trim();
+			while (scanner.hasNext()) {
+				if (!option.equals("") && option.charAt(0) == '#') {
+					String category = option.replace("#", "");
+					HashMap<String, String> tempmap = new HashMap<String, String>();
+					do {
+						option = scanner.nextLine().trim();
+						if (option.charAt(0) != '#') {
+							String[] splitstring = option.split("=");
+							tempmap.put(splitstring[0], splitstring[1]);
+						}
+					} while (option.charAt(0) != '#' && scanner.hasNext());
+					settingsmap.put(category, tempmap);
+				} else {
+					option = scanner.nextLine().trim();
+				}
+			}
+			scanner.close();
+		} catch (FileNotFoundException e) {
+			settingsmap.putAll(StandardSettings.get());
+			writeHashMapHashMaptoFile(settingsmap, "settings.txt");
+		}
+
+	}
+	
 	private void writeHashMapHashMaptoFile(
 			HashMap<String, HashMap<String, String>> map, String filepath) {
 		try {
