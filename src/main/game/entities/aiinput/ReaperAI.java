@@ -1,5 +1,14 @@
 package main.game.entities.aiinput;
 
-public class ReaperAI extends BasicAI{
+import main.game.entities.controls.ReaperControl;
 
+public class ReaperAI extends BasicAI{
+	ReaperControl control;
+	
+	public ReaperAI(ReaperControl control){
+		this.control = control;
+	}
+	
+	
+	
 }

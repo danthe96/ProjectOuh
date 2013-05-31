@@ -13,14 +13,15 @@ import com.jme3.system.AppSettings;
 public class Settings {
 	private AppSettings appsettings; // JME settings, which manage things like
 																		// vsync, framerate, etc.
-	private HashMap<String, String> settingsmap; // Project Ouh-specific settings
-	private HashMap<String, String> settingsbackup; // backup used before
-																									// executing applySettings()
+	private HashMap<String, HashMap<String, String>> settingsmap;
+	// Project Ouh-specific settings
+	private HashMap<String, HashMap<String, String>> settingsbackup;
+	// backup used before executing applySettings()
 
 	public Settings() {
 		appsettings = new AppSettings(true);
-		settingsmap = new HashMap<String, String>();
-		settingsbackup = new HashMap<String, String>();
+		settingsmap = new HashMap<String, HashMap<String, String>>();
+		settingsbackup = new HashMap<String, HashMap<String, String>>();
 		readSettings();
 	}
 
@@ -28,12 +29,14 @@ public class Settings {
 		return appsettings;
 	}
 
-	public String getSetting(String key) {
-		return settingsmap.get(key);
+	public String getSetting(String category, String key) {
+		return settingsmap.get(category).get(key);
 	}
 
-	public void setSetting(String key, String value) {
-		settingsbackup.put(key, value);
+	public void setSetting(String category, String key, String value) {
+		HashMap<String, String> temp_settingsbackup = new HashMap<String, String>();
+		temp_settingsbackup.put(key, value);
+		settingsbackup.put(category, temp_settingsbackup);
 	}
 
 	private void readSettings() { // Reading settings from settings file
@@ -41,17 +44,27 @@ public class Settings {
 			Scanner scanner = new Scanner(new File("settings.txt"));
 			while (scanner.hasNext()) {
 				String option = scanner.nextLine();
-				if (option.trim().charAt(0) != '#') { // '#' means the line will be
-																							// ignored
-					String[] splitstring = option.split("=");
-					settingsmap.put(splitstring[0], splitstring[1]);
+				if (!option.equals("") && option.trim().charAt(0) == '#') {
+					String category = option.trim().replace("#", "");
+					HashMap<String, String> tempmap = new HashMap<String, String>();
+					do {
+						option = scanner.nextLine();
+						if (option.trim().charAt(0) != '#' && scanner.hasNext()) {
+							String[] splitstring = option.split("=");
+							tempmap.put(splitstring[0], splitstring[1]);
+						}
+					} while (option.trim().charAt(0) != '#' && scanner.hasNext());
+					settingsmap.put(category, tempmap);
 				}
 			}
 			scanner.close();
 		} catch (FileNotFoundException e) {
 			settingsmap.putAll(StandardSettings.get());
-			writeHashMaptoFile(settingsmap, "settings.txt");
+			writeHashMapHashMaptoFile(settingsmap, "settings.txt");
 		}
+
+		for (String category : settingsmap.keySet())
+			System.out.println(settingsmap.get(category).toString());
 
 	}
 
@@ -59,21 +72,29 @@ public class Settings {
 	// data and the text file, method has to be
 	// called manually after setting something
 	public void applySettings() {
-		settingsmap.putAll(settingsbackup);
+		for (String category : settingsmap.keySet())
+			settingsmap.get(category).putAll(settingsbackup.get(category));
 		settingsbackup.clear();
 		new File("settings.txt").delete();
-		
-		writeHashMaptoFile(settingsmap,"settings.txt");
-		
+
+		writeHashMapHashMaptoFile(settingsmap, "settings.txt");
+
 	}
 
-	private void writeHashMaptoFile(HashMap<String,String> map, String filepath) {
+	private void writeHashMapHashMaptoFile(
+			HashMap<String, HashMap<String, String>> map, String filepath) {
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
 					filepath)));
-			String txtcontent = map.toString().replace("{", "")
-					.replace("}", "").replace(",", "\n");
-			writer.write(txtcontent);
+			StringBuffer txtcontent = new StringBuffer();
+			for (String category : map.keySet()) {
+				txtcontent.append("\n#"
+						+ category
+						+ "\n"
+						+ map.get(category).toString().replace("{", "").replace("}", "")
+								.replace(", ", "\n"));
+			}
+			writer.write(txtcontent.toString());
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
