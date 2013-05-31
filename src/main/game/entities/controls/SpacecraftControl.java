@@ -3,25 +3,20 @@ package main.game.entities.controls;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
 
+import com.jme3.scene.Spatial;
 import com.jme3.scene.control.Control;
 
 public abstract class SpacecraftControl extends RigidBodyControl
 		implements
 			Control {
 
-	public SpacecraftControl() {
-	}
-
-	public SpacecraftControl(float mass) {
-		super(mass);
-	}
-
-	public SpacecraftControl(CollisionShape shape) {
-		super(shape);
-	}
-
-	public SpacecraftControl(CollisionShape shape, float mass) {
+	public SpacecraftControl(Spatial spatial,CollisionShape shape, float mass) {
 		super(shape, mass);
+		this.setSpatial(spatial);
+	}
+	
+	public SpacecraftControl(Spatial spatial, float mass) {
+		super(mass);
 	}
 
 	public abstract void leftRotation();
@@ -51,6 +46,7 @@ public abstract class SpacecraftControl extends RigidBodyControl
 
 	@Override
 	public void update(float tpf) {
+		super.update(tpf);
 	}
 
 }
