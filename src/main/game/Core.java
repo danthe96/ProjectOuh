@@ -6,6 +6,7 @@ import main.game.entities.controls.SpacecraftControl;
 import main.game.entities.userinput.ReaperListener;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.bullet.BulletAppState;
 import com.jme3.input.KeyInput;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.KeyTrigger;
@@ -18,7 +19,8 @@ import com.jme3.scene.shape.Box;
 import com.jme3.util.SkyFactory;
 
 public class Core extends SimpleApplication {
-	Settings settings;
+	private Settings settings;
+	private BulletAppState bulletAppState;
 
 	public static void main(String[] args) {
 		Core coreapp = new Core();
@@ -27,6 +29,8 @@ public class Core extends SimpleApplication {
 
 	@Override
 	public void simpleInitApp() {
+		bulletAppState= new BulletAppState();
+		stateManager.attach(bulletAppState);
 		settings = new Settings();
 		rootNode.attachChild(SkyFactory.createSky(assetManager,
 				"assets/Textures/OutputCube2.dds", false));
@@ -39,6 +43,7 @@ public class Core extends SimpleApplication {
 		blue.setMaterial(mat1);
 		SpacecraftControl space = new ReaperControl(blue, 6);
 		blue.addControl(space);
+		bulletAppState.getPhysicsSpace().add(space);
 		rootNode.attachChild(blue);
 
 		ReaperListener.spacecraft = space;
