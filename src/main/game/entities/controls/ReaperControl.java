@@ -15,8 +15,8 @@ public class ReaperControl extends SpacecraftControl {
 		// TODO Auto-generated constructor stub
 	}
 
-	private static final float SENSITIVITY_X = 5f;
-	private static final float SENSITIVITY_Y = 5f;
+	private static final float SENSITIVITY_X = 100f;
+	private static final float SENSITIVITY_Y = 100f;
 	private float velocity = 2;
 	private float currentspeed = 0;
 
@@ -24,7 +24,8 @@ public class ReaperControl extends SpacecraftControl {
 	public void leftRotation(float value) {
 		Quaternion oldOne=new Quaternion();
 		getPhysicsRotation(oldOne);
-		Quaternion toRotate=new Quaternion(1, 0, value, SENSITIVITY_X);
+		float multiplier=value*mass;
+		Quaternion toRotate=new Quaternion(1, 0, multiplier, SENSITIVITY_X);
 		setPhysicsRotation(oldOne.mult(toRotate));
 	}
 
@@ -32,7 +33,8 @@ public class ReaperControl extends SpacecraftControl {
 	public void rightRotation(float value) {
 		Quaternion oldOne=new Quaternion();
 		getPhysicsRotation(oldOne);
-		Quaternion toRotate=new Quaternion(1, 0, value, -SENSITIVITY_X);
+		float multiplier=value*mass;
+		Quaternion toRotate=new Quaternion(1, 0, multiplier, -SENSITIVITY_X);
 		setPhysicsRotation(oldOne.mult(toRotate));
 	}
 
@@ -40,7 +42,8 @@ public class ReaperControl extends SpacecraftControl {
 	public void upRotation(float value) {
 		Quaternion oldOne=new Quaternion();
 		getPhysicsRotation(oldOne);
-		Quaternion toRotate=new Quaternion(0, value, 1, SENSITIVITY_Y);
+		float multiplier=value*mass;
+		Quaternion toRotate=new Quaternion(0, multiplier, 1, SENSITIVITY_Y);
 		setPhysicsRotation(oldOne.mult(toRotate));
 	}
 
@@ -48,7 +51,8 @@ public class ReaperControl extends SpacecraftControl {
 	public void downRotation(float value) {
 		Quaternion oldOne=new Quaternion();
 		getPhysicsRotation(oldOne);
-		Quaternion toRotate=new Quaternion(0, value, 1, -SENSITIVITY_Y);
+		float multiplier=value*mass;
+		Quaternion toRotate=new Quaternion(0, multiplier, 1, -SENSITIVITY_Y);
 		setPhysicsRotation(oldOne.mult(toRotate));
 	}
 
