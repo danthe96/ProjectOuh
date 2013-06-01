@@ -15,8 +15,10 @@ public class ReaperControl extends SpacecraftControl {
 		// TODO Auto-generated constructor stub
 	}
 
-	private static final float SENSITIVITY_X = 100f;
-	private static final float SENSITIVITY_Y = 100f;
+	// see http://www.esparacing.com/sport_pilot/how%20to%20control%20an%20aircraft.htm
+	private static final float SENSITIVITY_X = 100f; // aka "pitch"
+	private static final float SENSITIVITY_Y = 100f; // aka "roll"
+	private static final float SENSITIVITY_Z = 10f; // aka "yaw"; very low, we want to increase difficulty ;-)
 	private float velocity = 2;
 	private float currentspeed = 0;
 	private boolean accelerating = false;
@@ -57,6 +59,25 @@ public class ReaperControl extends SpacecraftControl {
 		Quaternion toRotate=new Quaternion(1, 0, multiplier, -SENSITIVITY_X);
 		setPhysicsRotation(oldOne.mult(toRotate));
 	}
+
+	@Override
+	public void yawRight(float value) {
+		Quaternion oldOne=new Quaternion();
+		getPhysicsRotation(oldOne);
+		float multiplier=value*mass;
+		Quaternion toRotate=new Quaternion(multiplier, 1, 0, SENSITIVITY_Z);
+		setPhysicsRotation(oldOne.mult(toRotate));		
+	}
+
+	@Override
+	public void yawLeft(float value) {
+		Quaternion oldOne=new Quaternion();
+		getPhysicsRotation(oldOne);
+		float multiplier=value*mass;
+		Quaternion toRotate=new Quaternion(multiplier, 1, 0, -SENSITIVITY_Z);
+		setPhysicsRotation(oldOne.mult(toRotate));		
+	}
+
 
 	@Override
 	public void accelerate() {

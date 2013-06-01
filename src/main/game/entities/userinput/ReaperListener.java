@@ -16,9 +16,9 @@ public class ReaperListener extends SpacecraftListener {
 			} else if (name.equals("DECELERATE")) {
 				spacecraft.decelerate();
 			} else if (name.equals("RIGHT")) {
-
+				spacecraft.yawRight(1f);
 			} else if (name.equals("LEFT")) {
-
+				spacecraft.yawLeft(1f);
 			}
 		}
 	};
