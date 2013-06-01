@@ -21,6 +21,7 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.jme3.util.SkyFactory;
@@ -82,8 +83,8 @@ public class Core extends SimpleApplication {
 	private void initSpacials() {
 		Box box1 = new Box(Vector3f.ZERO, new Vector3f(3,3,3));
 		Box boxstatic = new Box(new Vector3f(0,0,100), new Vector3f(5,10,125));
-		Geometry blue = new Geometry("Box", box1);
-		Geometry blue2 = new Geometry("Box2", boxstatic);
+		Node blue2 = (Node) assetManager.loadModel("assets/Models/testship.j3o");
+		Node blue = blue2.clone(true);
 		Material mat1 = new Material(assetManager,
 				"Common/MatDefs/Misc/Unshaded.j3md");
 		Material mat2 = new Material(assetManager,
