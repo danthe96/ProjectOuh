@@ -31,7 +31,8 @@ public class Core extends SimpleApplication {
 	//this is the body/machine, where you are inside, which you are playing
 	private Spatial character;
 
-	//the cam "inside" the Charachter (see simpleUpdate)
+	private boolean camBehindChar = false;
+	private static final float camDistanceBehindChar;
 
 	public static void main(String[] args) {
 		Core coreapp = new Core();
@@ -42,17 +43,19 @@ public class Core extends SimpleApplication {
 	public void simpleUpdate(float tpf) {
 		inputManager.setCursorVisible(false);//not mouse
 	
-		cam.setLocation(character.getLocalTranslation());
-		cam.setRotation(character.getLocalRotation());
-	
-		
+		Quaternion q, p;
+		q.set(character.getLocalTranslation());
 
-//		if(Cam!=null&&character!=null){
-//			Vector3f v = new Vector3f(0, 10 , 10);
-//			character.localToWorld( v, v);
-//			Cam.setLocation(v);
-//			Cam.lookAt(character.getWorldTranslation(), Vector3f.UNIT_Y);
-//		}
+		if (camBehindChar){
+			// TODO set the cam behind the Reaper
+			p = new Quaternion(0, 0, 1, -camDistanceBehindChar); //-cam* or +cam* please test
+			p.mult(character.getLocalRotation());
+			q.addLocal(p)
+		}
+
+		cam.setLocation(q);
+		cam.setRotation(character.getLocalRotation());
+
 	}
 
 	@Override
