@@ -49,7 +49,7 @@ public class Core extends SimpleApplication {
 		if (camBehindChar){
 			p = new Quaternion(0, 0, 1, -camDistanceBehindChar); //-cam* or +cam* please test
 			p.mult(character.getLocalRotation());
-			q.addLocal(p)
+			q.addLocal(p);
 		}
 
 		cam.setLocation(q);
