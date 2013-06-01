@@ -17,6 +17,7 @@ import com.jme3.input.controls.MouseAxisTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Geometry;
@@ -32,29 +33,12 @@ public class Core extends SimpleApplication {
 	private Spatial character;
 
 	private boolean camBehindChar = false;
-	private static final float camDistanceBehindChar;
+	private static final float CAM_DISTANCE_BEHIND_CHAR = 100;
+	private SpacecraftControl space;
 
 	public static void main(String[] args) {
 		Core coreapp = new Core();
 		coreapp.start();
-	}
-
-	@Override
-	public void simpleUpdate(float tpf) {
-		inputManager.setCursorVisible(false);//not mouse
-	
-		Quaternion q, p;
-		q.set(character.getLocalTranslation());
-
-		if (camBehindChar){
-			p = new Quaternion(0, 0, 1, -camDistanceBehindChar); //-cam* or +cam* please test
-			p.mult(character.getLocalRotation());
-			q.addLocal(p);
-		}
-
-		cam.setLocation(q);
-		cam.setRotation(character.getLocalRotation());
-
 	}
 
 	@Override
@@ -66,20 +50,38 @@ public class Core extends SimpleApplication {
 				"assets/Textures/OutputCube2.dds", false));
 
 		initSpacials();
-		
+
 		inputManager.setCursorVisible(false);//not mouse
 
 		//ChaseCamera chaseCam = new ChaseCamera(cam, blue);
-//		Cam = new Camera();
+		//		Cam = new Camera();
 
 		flyCam.setEnabled(false);
 		
 		initKeys();
 	}
+	
+	@Override
+	public void simpleUpdate(float tpf) {
+		inputManager.setCursorVisible(false);//not mouse
+	
+		Quaternion q, p;
+		q = new Quaternion(character.getLocalTranslation().x,character.getLocalTranslation().y,character.getLocalTranslation().z, 0f);
+		
+	  if (camBehindChar){      // has no impact on game
+			p = new Quaternion(0, 0, 1, +CAM_DISTANCE_BEHIND_CHAR); //-cam* or +cam* please test
+			p.mult(character.getLocalRotation());
+			q.addLocal(p);
+		}
+
+		cam.setLocation(character.getLocalTranslation());
+		cam.setRotation(character.getLocalRotation());
+
+	}
 
 	private void initSpacials() {
-		Box box1 = new Box(Vector3f.ZERO, 1, 1, 1);
-		Box boxstatic = new Box(Vector3f.ZERO, 5, 1, 1);
+		Box box1 = new Box(Vector3f.ZERO, new Vector3f(3,3,3));
+		Box boxstatic = new Box(new Vector3f(0,0,100), new Vector3f(5,10,125));
 		Geometry blue = new Geometry("Box", box1);
 		Geometry blue2 = new Geometry("Box2", boxstatic);
 		Material mat1 = new Material(assetManager,
@@ -90,7 +92,7 @@ public class Core extends SimpleApplication {
 		mat2.setColor("Color", ColorRGBA.Green);
 		blue.setMaterial(mat1);
 		blue2.setMaterial(mat2);
-		SpacecraftControl space = new ReaperControl(blue, 6);
+		space = new ReaperControl(blue, 6);
 		blue.addControl(space);
 		space.setGravity(new Vector3f(0f, 0f, 0.0001f));
 		bulletAppState.getPhysicsSpace().add(space);

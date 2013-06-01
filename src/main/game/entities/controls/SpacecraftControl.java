@@ -25,8 +25,8 @@ public abstract class SpacecraftControl extends RigidBodyControl
 	public abstract void downRotation(float value);
 	public abstract void accelerate();
 	public abstract void decelerate();
-	public abstract void yawRight(float value);
-	public abstract void yawLeft(float value);
+	public abstract void yawRight();
+	public abstract void yawLeft();
 	public abstract void land();
 	public abstract void lift();
 	public abstract void primaryShoot();
