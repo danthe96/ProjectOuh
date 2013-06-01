@@ -27,23 +27,23 @@ public class ReaperControl extends SpacecraftControl {
 	private boolean yawLeft = false;
 
 	@Override
-	public void leftRotation(float value) {
-		doRotation(0, value*mass, 1, SENSITIVITY_X);
+	public void leftRotation(float value, float tpf) {
+		doRotation(0, value*mass, 1900*tpf, SENSITIVITY_X);
 	}
 
 	@Override
-	public void rightRotation(float value) {
-		doRotation(0, value*mass, 1, -SENSITIVITY_X);
+	public void rightRotation(float value, float tpf) {
+		doRotation(0, value*mass, 1900*tpf, -SENSITIVITY_X);
 	}
 
 	@Override
-	public void upRotation(float value) {
-		doRotation(1, 0, value*mass, -SENSITIVITY_Y);
+	public void upRotation(float value, float tpf) {
+		doRotation(1900*tpf, 0, value*mass, -SENSITIVITY_Y);
 	}
 
 	@Override
-	public void downRotation(float value) {
-		doRotation(1, 0, value*mass, SENSITIVITY_Y);
+	public void downRotation(float value, float tpf) {
+		doRotation(1900*tpf, 0, value*mass, SENSITIVITY_Y);
 	}
 
 	@Override
@@ -114,11 +114,11 @@ public class ReaperControl extends SpacecraftControl {
 		}
 
 		if(yawRight){
-			doRotation(0, 1, 0, -SENSITIVITY_Z);
+			doRotation(0, 1900*tpf, 0, -SENSITIVITY_Z);
 		}
 
 		if(yawLeft){
-			doRotation(0, 1, 0, SENSITIVITY_Z);
+			doRotation(0, 1900*tpf, 0, SENSITIVITY_Z);
 		}
 
 		setLinearVelocity(spatial.getLocalRotation().getRotationColumn(2).mult(+currentspeed));

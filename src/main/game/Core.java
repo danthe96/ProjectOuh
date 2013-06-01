@@ -7,7 +7,8 @@ import java.util.List;
 import main.Settings;
 import main.game.entities.controls.ReaperControl;
 import main.game.entities.controls.SpacecraftControl;
-import main.game.entities.userinput.ReaperListener;
+import main.game.entities.userinput.GroundListener;
+import main.game.entities.userinput.SpacecraftListener;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
@@ -29,7 +30,7 @@ public class Core extends SimpleApplication {
 	//this is the body/machine, where you are inside, which you are playing
 	private Spatial character;
 
-	private boolean camBehindChar = true;
+	private boolean camBehindChar = false;
 	private static final float CAM_DISTANCE_BEHIND_CHAR = 50;
 	private SpacecraftControl space;
 
@@ -43,11 +44,11 @@ public class Core extends SimpleApplication {
 		bulletAppState= new BulletAppState();
 		stateManager.attach(bulletAppState);
 		settings = new Settings();
-		settings.getAppSettings().setVSync(true);
+		
 		rootNode.attachChild(SkyFactory.createSky(assetManager,
 				"assets/Textures/OutputCube2.dds", false));
 
-		initSpacials();
+		initSpatials();
 
 		inputManager.setCursorVisible(false);//not mouse
 
@@ -56,7 +57,7 @@ public class Core extends SimpleApplication {
 
 		flyCam.setEnabled(false);
 
-		initKeys();
+		initKeys('a');
 	}
 
 	@Override
@@ -79,7 +80,7 @@ public class Core extends SimpleApplication {
 		cam.setRotation(character.getLocalRotation());
 	}
 
-	private void initSpacials() {
+	private void initSpatials() {
 		Material mat_brick = new Material( 
 				assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
 		mat_brick.setTexture("ColorMap", 
@@ -98,7 +99,7 @@ public class Core extends SimpleApplication {
 		blue.addControl(space);
 		space.setGravity(new Vector3f(0f, 0f, 0.0001f));
 		bulletAppState.getPhysicsSpace().add(space);
-		ReaperListener.spacecraft = space;
+		SpacecraftListener.spacecraft = space;
 		rootNode.attachChild(blue);
 		rootNode.attachChild(blue2);
 		rootNode.attachChild(box);
@@ -106,14 +107,19 @@ public class Core extends SimpleApplication {
 		character = blue;
 	}
 
-	private void initKeys() {
+	private void initKeys(char controlType){
 		inputManager.clearMappings();
 
-		HashMap<String, String> reaperControls = settings.getSettingsMap("ReaperControls");
+		HashMap<String, String> controls = null;
+		if(controlType == 'a')
+		   controls = settings.getSettingsMap("AirControls");
+		else if(controlType == 'g')
+			controls = settings.getSettingsMap("GroundControls");
+		
 		List<String> actionKey = new ArrayList<String>();
 		List<String> analogKey = new ArrayList<String>();
-		for (String key : reaperControls.keySet()) {
-			String binding = reaperControls.get(key);
+		for (String key : controls.keySet()) {
+			String binding = controls.get(key);
 			if (binding.charAt(0) == 'k') {
 				inputManager.addMapping(key, new KeyTrigger(Integer.parseInt(binding.substring(1))));
 				actionKey.add(key);
@@ -129,10 +135,14 @@ public class Core extends SimpleApplication {
 			}
 		}
 
-		ReaperListener reaperListener = new ReaperListener();//Temporarily an object, maybe it will changed to static again 
-		inputManager.addListener(reaperListener.actionListener,  actionKey.toArray(new String[actionKey.size()]));
-
-		inputManager.addListener(reaperListener.analogListener, analogKey.toArray(new String[analogKey.size()]));
+		if(controlType == 'a'){
+			inputManager.addListener(SpacecraftListener.actionListener,  actionKey.toArray(new String[actionKey.size()]));
+			inputManager.addListener(SpacecraftListener.analogListener, analogKey.toArray(new String[analogKey.size()]));
+		}
+		else if(controlType == 'g'){
+			inputManager.addListener(GroundListener.actionListener,  actionKey.toArray(new String[actionKey.size()]));
+			inputManager.addListener(GroundListener.analogListener, analogKey.toArray(new String[analogKey.size()]));
+		}
 
 	}
 
