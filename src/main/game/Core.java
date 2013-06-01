@@ -47,7 +47,6 @@ public class Core extends SimpleApplication {
 		q.set(character.getLocalTranslation());
 
 		if (camBehindChar){
-			// TODO set the cam behind the Reaper
 			p = new Quaternion(0, 0, 1, -camDistanceBehindChar); //-cam* or +cam* please test
 			p.mult(character.getLocalRotation());
 			q.addLocal(p)
