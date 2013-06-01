@@ -13,17 +13,17 @@ public class StandardSettings {
 		
 		map = new HashMap<String,HashMap<String,String>>();
 		
-		HashMap<String,String> airControls = new HashMap<String,String>();
-		airControls.put("ACCELERATE", "k" + KeyInput.KEY_W);
-		airControls.put("DECELERATE", "k" + KeyInput.KEY_S);
-		airControls.put("RIGHT", "k" + KeyInput.KEY_D);
-		airControls.put("LEFT", "k" + KeyInput.KEY_A);
-		airControls.put("ROTATE_RIGHT", "at" + MouseInput.AXIS_X);
-		airControls.put("ROTATE_LEFT", "af" + MouseInput.AXIS_X);
-		airControls.put("STEER_UP", "at" + MouseInput.AXIS_Y);
-		airControls.put("STEER_DOWN", "af" + MouseInput.AXIS_Y);
+		HashMap<String,String> spacecraftControls = new HashMap<String,String>();
+		spacecraftControls.put("ACCELERATE", "k" + KeyInput.KEY_W);
+		spacecraftControls.put("DECELERATE", "k" + KeyInput.KEY_S);
+		spacecraftControls.put("RIGHT", "k" + KeyInput.KEY_D);
+		spacecraftControls.put("LEFT", "k" + KeyInput.KEY_A);
+		spacecraftControls.put("ROTATE_RIGHT", "at" + MouseInput.AXIS_X);
+		spacecraftControls.put("ROTATE_LEFT", "af" + MouseInput.AXIS_X);
+		spacecraftControls.put("STEER_UP", "at" + MouseInput.AXIS_Y);
+		spacecraftControls.put("STEER_DOWN", "af" + MouseInput.AXIS_Y);
 		
-		map.put("AirControls", airControls);
+		map.put("SpacecraftControls", spacecraftControls);
 		
 		HashMap<String,String> groundControls = new HashMap<String,String>();
 		groundControls.put("FORWARD", "k" + KeyInput.KEY_W);

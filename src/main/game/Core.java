@@ -57,7 +57,7 @@ public class Core extends SimpleApplication {
 
 		flyCam.setEnabled(false);
 
-		initKeys('a');
+		initKeys(ControlType.SPACECRAFT);
 	}
 
 	@Override
@@ -107,13 +107,13 @@ public class Core extends SimpleApplication {
 		character = blue;
 	}
 
-	private void initKeys(char controlType){
+	private void initKeys(ControlType controlType){
 		inputManager.clearMappings();
 
 		HashMap<String, String> controls = null;
-		if(controlType == 'a')
-		   controls = settings.getSettingsMap("AirControls");
-		else if(controlType == 'g')
+		if(controlType == ControlType.SPACECRAFT)
+		   controls = settings.getSettingsMap("SpacecraftControls");
+		else if(controlType == ControlType.GROUND)
 			controls = settings.getSettingsMap("GroundControls");
 		
 		List<String> actionKey = new ArrayList<String>();
@@ -135,15 +135,19 @@ public class Core extends SimpleApplication {
 			}
 		}
 
-		if(controlType == 'a'){
+		if(controlType == ControlType.SPACECRAFT){
 			inputManager.addListener(SpacecraftListener.actionListener,  actionKey.toArray(new String[actionKey.size()]));
 			inputManager.addListener(SpacecraftListener.analogListener, analogKey.toArray(new String[analogKey.size()]));
 		}
-		else if(controlType == 'g'){
+		else if(controlType == ControlType.GROUND){
 			inputManager.addListener(GroundListener.actionListener,  actionKey.toArray(new String[actionKey.size()]));
 			inputManager.addListener(GroundListener.analogListener, analogKey.toArray(new String[analogKey.size()]));
 		}
 
+	}
+	
+	private enum ControlType {
+		SPACECRAFT,GROUND,MACHINE
 	}
 
 }
