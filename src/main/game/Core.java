@@ -11,15 +11,11 @@ import main.game.entities.userinput.ReaperListener;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
-import com.jme3.input.ChaseCamera;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseAxisTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.material.Material;
-import com.jme3.math.ColorRGBA;
-import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
-import com.jme3.renderer.Camera;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -33,8 +29,8 @@ public class Core extends SimpleApplication {
 	//this is the body/machine, where you are inside, which you are playing
 	private Spatial character;
 
-	private boolean camBehindChar = false;
-	private static final float CAM_DISTANCE_BEHIND_CHAR = 100;
+	private boolean camBehindChar = true;
+	private static final float CAM_DISTANCE_BEHIND_CHAR = 50;
 	private SpacecraftControl space;
 
 	public static void main(String[] args) {
@@ -47,6 +43,7 @@ public class Core extends SimpleApplication {
 		bulletAppState= new BulletAppState();
 		stateManager.attach(bulletAppState);
 		settings = new Settings();
+		settings.getAppSettings().setVSync(true);
 		rootNode.attachChild(SkyFactory.createSky(assetManager,
 				"assets/Textures/OutputCube2.dds", false));
 
@@ -58,41 +55,45 @@ public class Core extends SimpleApplication {
 		//		Cam = new Camera();
 
 		flyCam.setEnabled(false);
-		
+
 		initKeys();
 	}
-	
+
 	@Override
 	public void simpleUpdate(float tpf) {
 		inputManager.setCursorVisible(false);//not mouse
-	
-		Quaternion q, p;
-		q = new Quaternion(character.getLocalTranslation().x,character.getLocalTranslation().y,character.getLocalTranslation().z, 0f);
-		
-	  if (camBehindChar){      // has no impact on game
-			p = new Quaternion(0, 0, 1, +CAM_DISTANCE_BEHIND_CHAR); //-cam* or +cam* please test
-			p.mult(character.getLocalRotation());
-			q.addLocal(p);
+
+		Vector3f camvec= character.getLocalTranslation();
+		//	  Quaternion q, p;
+
+		if (camBehindChar){      // has no impact on game
+
+			character.localToWorld(new Vector3f(0, 0, -CAM_DISTANCE_BEHIND_CHAR),camvec);
+			//	   p = new Quaternion(0, 0, 1, +CAM_DISTANCE_BEHIND_CHAR); //-cam* or +cam* please test
+			//	   p.mult(character.getLocalRotation());
+			//	   q.addLocal(p);
 		}
 
-		cam.setLocation(character.getLocalTranslation());
-		cam.setRotation(character.getLocalRotation());
 
+		cam.setLocation(camvec);
+		cam.setRotation(character.getLocalRotation());
 	}
 
 	private void initSpacials() {
-		Box box1 = new Box(Vector3f.ZERO, new Vector3f(3,3,3));
-		Box boxstatic = new Box(new Vector3f(0,0,100), new Vector3f(5,10,125));
-		Node blue2 = (Node) assetManager.loadModel("assets/Models/testship.j3o");
-		Node blue = blue2.clone(true);
-		Material mat1 = new Material(assetManager,
-				"Common/MatDefs/Misc/Unshaded.j3md");
-		Material mat2 = new Material(assetManager,
-				"Common/MatDefs/Misc/Unshaded.j3md");
-		mat1.setColor("Color", ColorRGBA.Blue);
-		mat2.setColor("Color", ColorRGBA.Green);
-		blue.setMaterial(mat1);
-		blue2.setMaterial(mat2);
+		Material mat_brick = new Material( 
+				assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+		mat_brick.setTexture("ColorMap", 
+				assetManager.loadTexture("Textures/Terrain/BrickWall/BrickWall.jpg"));
+
+		Spatial box = new Geometry("Box",new Box(new Vector3f(25,-10,75), new Vector3f(30,-5,80)));
+		box.setMaterial(mat_brick);
+
+		Node blue = (Node)assetManager.loadModel("assets/Models/testship.j3o");
+		blue.setMaterial(mat_brick);
+
+		Node blue2 = blue.clone(true);
+		blue2.setLocalTranslation(0, 0, 100);
+
 		space = new ReaperControl(blue, 6);
 		blue.addControl(space);
 		space.setGravity(new Vector3f(0f, 0f, 0.0001f));
@@ -100,6 +101,7 @@ public class Core extends SimpleApplication {
 		ReaperListener.spacecraft = space;
 		rootNode.attachChild(blue);
 		rootNode.attachChild(blue2);
+		rootNode.attachChild(box);
 
 		character = blue;
 	}

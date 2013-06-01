@@ -2,7 +2,6 @@ package main.game.entities.controls;
 
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.math.Quaternion;
-import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 
 public class ReaperControl extends SpacecraftControl {
@@ -29,38 +28,22 @@ public class ReaperControl extends SpacecraftControl {
 
 	@Override
 	public void leftRotation(float value) {
-		Quaternion oldOne=new Quaternion();
-		getPhysicsRotation(oldOne);
-		float multiplier=value*mass;
-		Quaternion toRotate=new Quaternion(0, multiplier, 1, SENSITIVITY_X);
-		setPhysicsRotation(oldOne.mult(toRotate));
+		doRotation(0, value*mass, 1, SENSITIVITY_X);
 	}
 
 	@Override
 	public void rightRotation(float value) {
-		Quaternion oldOne=new Quaternion();
-		getPhysicsRotation(oldOne);
-		float multiplier=value*mass;
-		Quaternion toRotate=new Quaternion(0, multiplier, 1, -SENSITIVITY_X);
-		setPhysicsRotation(oldOne.mult(toRotate));
+		doRotation(0, value*mass, 1, -SENSITIVITY_X);
 	}
 
 	@Override
 	public void upRotation(float value) {
-		Quaternion oldOne=new Quaternion();
-		getPhysicsRotation(oldOne);
-		float multiplier=value*mass;
-		Quaternion toRotate=new Quaternion(1, 0, multiplier, -SENSITIVITY_Y);
-		setPhysicsRotation(oldOne.mult(toRotate));
+		doRotation(1, 0, value*mass, -SENSITIVITY_Y);
 	}
 
 	@Override
 	public void downRotation(float value) {
-		Quaternion oldOne=new Quaternion();
-		getPhysicsRotation(oldOne);
-		float multiplier=value*mass;
-		Quaternion toRotate=new Quaternion(1, 0, multiplier, SENSITIVITY_Y);
-		setPhysicsRotation(oldOne.mult(toRotate));
+		doRotation(1, 0, value*mass, SENSITIVITY_Y);
 	}
 
 	@Override
@@ -72,7 +55,6 @@ public class ReaperControl extends SpacecraftControl {
 	public void yawLeft() {
 		yawLeft = !yawLeft;		
 	}
-
 
 	@Override
 	public void accelerate() {
@@ -116,42 +98,38 @@ public class ReaperControl extends SpacecraftControl {
 	public void update(float tpf){  // tpf = 1/fps  in seconds
 
 		if (accelerating && (currentspeed <= 30)) {
-			currentspeed+=acceleration*tpf;   // 5 m/s²
-			System.out.println("accelerating "+currentspeed);
-		}else {
+			currentspeed += acceleration * tpf; // 5 m/s²
+			System.out.println("accelerating " + currentspeed);
+		} else {
 			if (decelerating && (currentspeed >= -30)) {
-				currentspeed-=acceleration*tpf;  // 5 m/s²
-				System.out.println("decelerating "+currentspeed);
+				currentspeed -= acceleration * tpf; // 5 m/s²
+				System.out.println("decelerating " + currentspeed);
 			} else {
-				if(currentspeed>0)
-					currentspeed-=1.5*tpf;
-				else if(currentspeed<0)
-					currentspeed+=1.5*tpf;
+				if (currentspeed > 0)
+					currentspeed -= 1.5 * tpf;
+				else if (currentspeed < 0)
+					currentspeed += 1.5 * tpf;
 
 			}
 		}
 
 		if(yawRight){
-			Quaternion oldOne=new Quaternion();
-			getPhysicsRotation(oldOne);
-			//float multiplier = mass;  DON'T USE THIS
-			Quaternion toRotate=new Quaternion(0, 1, 0, -SENSITIVITY_Z);
-			setPhysicsRotation(oldOne.mult(toRotate));	
+			doRotation(0, 1, 0, -SENSITIVITY_Z);
 		}
 
 		if(yawLeft){
-			Quaternion oldOne=new Quaternion();
-			getPhysicsRotation(oldOne);
-			//float multiplier = mass;  DON'T USE THIS, fucks up direction AND sensitivity
-			Quaternion toRotate=new Quaternion(0, 1, 0, SENSITIVITY_Z);
-			setPhysicsRotation(oldOne.mult(toRotate));	
+			doRotation(0, 1, 0, SENSITIVITY_Z);
 		}
-
-
 
 		setLinearVelocity(spatial.getLocalRotation().getRotationColumn(2).mult(+currentspeed));
 		super.update(tpf);
 
+	}
+
+	private void doRotation(float x, float y, float z, float w){
+		Quaternion oldOne = getPhysicsRotation();
+		Quaternion toRotate=new Quaternion(x, y, z, w);
+		setPhysicsRotation(oldOne.mult(toRotate));
 	}
 
 }
