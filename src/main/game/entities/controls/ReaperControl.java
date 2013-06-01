@@ -20,7 +20,7 @@ public class ReaperControl extends SpacecraftControl {
 	private static final float SENSITIVITY_X = 500f; // aka "pitch"
 	private static final float SENSITIVITY_Y = 500f; // aka "roll"
 	private static final float SENSITIVITY_Z = 10000f; // aka "yaw"; very low, we want to increase difficulty ;-)
-	private float velocity = 5;
+	private float acceleration = 5;
 	private float currentspeed = 0;
 	private boolean accelerating = false;
 	private boolean decelerating = false;
@@ -111,17 +111,24 @@ public class ReaperControl extends SpacecraftControl {
 		// TODO Auto-generated method stub
 
 	}
-	
+
 	@Override
 	public void update(float tpf){  // tpf = 1/fps  in seconds
-		
-		if (accelerating && (currentspeed <= 20)) {
-			currentspeed+=velocity*tpf;   // 5 m/s²
+
+		if (accelerating && (currentspeed <= 30)) {
+			currentspeed+=acceleration*tpf;   // 5 m/s²
 			System.out.println("accelerating "+currentspeed);
-		}
-		if (decelerating && (currentspeed >= -20)) {
-			currentspeed-=velocity*tpf;  // 5 m/s²
-			System.out.println("decelerating "+currentspeed);
+		}else {
+			if (decelerating && (currentspeed >= -30)) {
+				currentspeed-=acceleration*tpf;  // 5 m/s²
+				System.out.println("decelerating "+currentspeed);
+			} else {
+				if(currentspeed>0)
+					currentspeed-=1.5*tpf;
+				else if(currentspeed<0)
+					currentspeed+=1.5*tpf;
+
+			}
 		}
 
 		if(yawRight){
