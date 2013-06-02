@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import main.Settings;
+import main.game.entities.controls.GroundControl;
 import main.game.entities.controls.ReaperControl;
 import main.game.entities.controls.SpacecraftControl;
 import main.game.entities.userinput.GroundListener;
@@ -26,13 +27,13 @@ import com.jme3.util.SkyFactory;
 public class Core extends SimpleApplication {
 	private Settings settings;
 	private BulletAppState bulletAppState;
-
+	
 	//this is the body/machine, where you are inside, which you are playing
-	private Spatial character;
-
-	private boolean camBehindChar = false;
+	private Spatial character;	
 	private static final float CAM_DISTANCE_BEHIND_CHAR = 50;
-	private SpacecraftControl space;
+	private SpacecraftControl spaceControl;
+	private GroundControl groundControl;
+	private boolean camBehindChar = false;
 
 	public static void main(String[] args) {
 		Core coreapp = new Core();
@@ -79,6 +80,10 @@ public class Core extends SimpleApplication {
 		cam.setLocation(camvec);
 		cam.setRotation(character.getLocalRotation());
 	}
+	
+	public void switchCam(){
+		camBehindChar = !camBehindChar;		
+	}
 
 	private void initSpatials() {
 		Material mat_brick = new Material( 
@@ -90,16 +95,16 @@ public class Core extends SimpleApplication {
 		box.setMaterial(mat_brick);
 
 		Node blue = (Node)assetManager.loadModel("assets/Models/testship.j3o");
+		System.out.println(blue.getChildren());
 		blue.setMaterial(mat_brick);
 
 		Node blue2 = blue.clone(true);
 		blue2.setLocalTranslation(0, 0, 100);
 
-		space = new ReaperControl(blue, 6);
-		blue.addControl(space);
-		space.setGravity(new Vector3f(0f, 0f, 0.0001f));
-		bulletAppState.getPhysicsSpace().add(space);
-		SpacecraftListener.spacecraft = space;
+		spaceControl = new ReaperControl(blue, 6);
+		blue.addControl(spaceControl);
+		spaceControl.setGravity(new Vector3f(0f, 0f, 0.0001f));
+		bulletAppState.getPhysicsSpace().add(spaceControl);
 		rootNode.attachChild(blue);
 		rootNode.attachChild(blue2);
 		rootNode.attachChild(box);
@@ -136,12 +141,14 @@ public class Core extends SimpleApplication {
 		}
 
 		if(controlType == ControlType.SPACECRAFT){
-			inputManager.addListener(SpacecraftListener.actionListener,  actionKey.toArray(new String[actionKey.size()]));
-			inputManager.addListener(SpacecraftListener.analogListener, analogKey.toArray(new String[analogKey.size()]));
+			SpacecraftListener spacecraftListener = new SpacecraftListener(this, spaceControl);
+			inputManager.addListener(spacecraftListener.actionListener,  actionKey.toArray(new String[actionKey.size()]));
+			inputManager.addListener(spacecraftListener.analogListener, analogKey.toArray(new String[analogKey.size()]));
 		}
 		else if(controlType == ControlType.GROUND){
-			inputManager.addListener(GroundListener.actionListener,  actionKey.toArray(new String[actionKey.size()]));
-			inputManager.addListener(GroundListener.analogListener, analogKey.toArray(new String[analogKey.size()]));
+			GroundListener groundListener = new GroundListener(this, groundControl);
+			inputManager.addListener(groundListener.actionListener,  actionKey.toArray(new String[actionKey.size()]));
+			inputManager.addListener(groundListener.analogListener, analogKey.toArray(new String[analogKey.size()]));
 		}
 
 	}

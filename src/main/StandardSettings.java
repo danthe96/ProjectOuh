@@ -22,6 +22,7 @@ public class StandardSettings {
 		spacecraftControls.put("ROTATE_LEFT", "af" + MouseInput.AXIS_X);
 		spacecraftControls.put("STEER_UP", "at" + MouseInput.AXIS_Y);
 		spacecraftControls.put("STEER_DOWN", "af" + MouseInput.AXIS_Y);
+		spacecraftControls.put("CAMERA_SWITCH", "k" + KeyInput.KEY_C);
 		
 		map.put("SpacecraftControls", spacecraftControls);
 		
@@ -34,6 +35,7 @@ public class StandardSettings {
 		groundControls.put("CAMERA_LEFT", "af" + MouseInput.AXIS_X);
 		groundControls.put("CAMERA_UP", "at" + MouseInput.AXIS_Y);
 		groundControls.put("CAMERA_DOWN", "af" + MouseInput.AXIS_Y);
+		groundControls.put("CAMERA_SWITCH", "k" + KeyInput.KEY_C);
 		
 		map.put("GroundControls", groundControls);
  			
