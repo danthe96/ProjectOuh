@@ -20,11 +20,20 @@ public class RocketControl extends AbstractControl{
 	 * Never directly call this variable. Use getTargetLocation() instead. (Needed for moving aims)
 	 */
 	Spatial target;
-	float speed = 1f;
+	Camera cam;
+	float speed = 5f;
 	float turnspeed = 1f;
 	
-	RocketControl(Spatial target) {
-		this.target = target;
+	Quaternion currentRotation;
+	Vector3f position;
+	Vector3f halfrocketlength = new Vector3f(0,0,-1.25f);
+	Vector3f traildistance;
+	
+	public RocketControl(Camera cam) {
+		this.cam = cam;
+	}
+	public RocketTrailControl getRocketTrailControl() {
+		return new RocketTrailControl();
 	}
 	
 	Vector3f getTopofSpatial() {
@@ -34,7 +43,7 @@ public class RocketControl extends AbstractControl{
 	}
 	
 	Vector3f getTargetLocation() {
-		return target.getWorldTranslation();
+		return cam.getLocation();
 	}
 	@Override
 	protected void controlRender(RenderManager arg0, ViewPort arg1) {
@@ -45,28 +54,60 @@ public class RocketControl extends AbstractControl{
 	@Override
 	protected void controlUpdate(float tpf) {
 		
-		System.out.println(tpf);
-		System.out.println(getSpatial().getLocalTranslation());
+
+		updateRocket(tpf);
 		
 		
+		
+	}
+
+	/**
+	 * @param tpf
+	 */
+	private void updateRocket(float tpf) {
 		Vector3f desiredDirection = getTargetLocation().subtract(getSpatial().getLocalTranslation());
 		Quaternion desiredRotation = getSpatial().getLocalRotation().clone();
 		desiredRotation.lookAt(desiredDirection, getTopofSpatial());
 		
-		Quaternion currentRotation = getSpatial().getLocalRotation();
+		currentRotation = getSpatial().getLocalRotation();
 		currentRotation.slerp(desiredRotation, turnspeed*tpf);
-		System.out.println(currentRotation);
 		
 		//getSpatial().setLocalRotation(currentRotation);
 		Vector3f movement = new Vector3f();
-		getSpatial().setLocalRotation(currentRotation);
 		
 		movement = new Vector3f(0,0,1);
 		movement = movement.mult(speed*tpf);
 		currentRotation.mult(movement, movement);
-		getSpatial().setLocalTranslation(getSpatial().getLocalTranslation().add(movement));
+		
+		//The trail will be controlled next and the particles need to render earlier to display the movement better
+		//currentRotation.slerp(desiredRotation, turnspeed*tpf*1.5f);
+		getSpatial().setLocalRotation(currentRotation);
+		position = getSpatial().getLocalTranslation().add(movement);
+		getSpatial().setLocalTranslation(position);
+		traildistance = new Vector3f();
+		currentRotation.mult(halfrocketlength, traildistance);
+		
+		
 		
 	}
 
+	public class RocketTrailControl extends AbstractControl{
+
+		@Override
+		protected void controlRender(RenderManager arg0, ViewPort arg1) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		protected void controlUpdate(float arg0) {
+			getSpatial().setLocalRotation(currentRotation);
+			System.out.println(traildistance);
+			getSpatial().setLocalTranslation(position.add(traildistance));
+
+			
+		}
+		
+	}
 	
 }

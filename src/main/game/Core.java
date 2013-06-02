@@ -50,7 +50,7 @@ public class Core extends SimpleApplication {
 
 		initSpatials();
 
-		inputManager.setCursorVisible(false);//not mouse
+		inputManager.setCursorVisible(false);//hides the cursor
 
 		//ChaseCamera chaseCam = new ChaseCamera(cam, blue);
 		//		Cam = new Camera();
