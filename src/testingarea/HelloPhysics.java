@@ -81,7 +81,7 @@ public class HelloPhysics extends SimpleApplication {
     /** Set up Physics Game */
     bulletAppState = new BulletAppState();
     stateManager.attach(bulletAppState);
-    bulletAppState.getPhysicsSpace().enableDebug(assetManager);
+    //bulletAppState.getPhysicsSpace().enableDebug(assetManager);
 
     /** Configure cam to look at scene */
     cam.setLocation(new Vector3f(0, 4f, 6f));
@@ -156,7 +156,7 @@ public class HelloPhysics extends SimpleApplication {
         mat.setColor("Color", ColorRGBA.Blue);   // set color of material to blue
         geom.setMaterial(mat);                   // set the cube's material
 
-		geom.setLocalTranslation(new Vector3f(0,15f,0));
+		geom.setLocalTranslation(new Vector3f(0,15f,-1000f));
         rocketNode.attachChild(geom);              // make the cube appear in the scene
         RocketControl rc = new RocketControl(target, 2.5f);
         geom.addControl(rc);

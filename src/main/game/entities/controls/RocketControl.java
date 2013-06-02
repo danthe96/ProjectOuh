@@ -1,9 +1,7 @@
 package main.game.entities.controls;
 import main.game.physics.Explodable;
 
-import com.jme3.bullet.PhysicsSpace;
-import com.jme3.bullet.collision.PhysicsCollisionEvent;
-import com.jme3.bullet.collision.PhysicsCollisionListener;
+
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
@@ -35,7 +33,7 @@ public class RocketControl extends AbstractControl{
 	/**
 	 * Currently it does not accelerate or deccelarate. Speed is in meters per secound
 	 */
-	private float speed = 5f;
+	private float speed = 100f;
 	/**
 	 * In percent of desireddirection/currentRotation per secound
 	 */
@@ -183,7 +181,7 @@ public class RocketControl extends AbstractControl{
 
 		@Override
 		public float getExplosionStrength() {
-			return 10f;
+			return 20f;
 		}
 
 		@Override
