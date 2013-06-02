@@ -1,4 +1,6 @@
 package main.game.entities.controls;
+import main.game.physics.Explodable;
+
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
@@ -18,6 +20,12 @@ import com.jme3.scene.control.AbstractControl;
  *
  */
 public class RocketControl extends AbstractControl{
+	
+	
+	/**
+	 * Theres a small time between the hit of the rocket and the next update, when it will explode. Yet the time is long enough to call the collision multiple times, thus I have created this variable to prevent multiple triggering.
+	 */
+	boolean btriggered=false;
 
 	/**
 	 * Never directly call this variable. Use getTargetLocation() instead. (Needed for moving aims)
@@ -159,15 +167,38 @@ public class RocketControl extends AbstractControl{
 			getSpatial().setLocalRotation(currentRotation);
 			getSpatial().setLocalTranslation(position.add(traildistance));
 
-			
+			if (btriggered) {
+				getSpatial().removeFromParent();
+				
+			}
 		}
 		
 	}
 	
-	public class RocketPhysicsControl extends RigidBodyControl{
+	public class RocketPhysicsControl extends RigidBodyControl implements Explodable{
 		
 		RocketPhysicsControl(float mass) {
 			super(mass);
+		}
+
+		@Override
+		public float getExplosionStrength() {
+			return 10f;
+		}
+
+		@Override
+		public float getExplosionRadius() {
+			return 5f;
+		}
+
+		@Override
+		public boolean isTriggered() {
+			return btriggered;
+		}
+
+		@Override
+		public void setTriggered(boolean bvalue) {
+			btriggered=bvalue;
 		}
 	    
 	}

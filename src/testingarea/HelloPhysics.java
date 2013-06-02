@@ -1,8 +1,8 @@
 package testingarea;
-import main.game.HitManager;
 import main.game.art.RocketTrail;
 import main.game.entities.controls.RocketControl;
 import main.game.entities.controls.RocketControl.RocketPhysicsControl;
+import main.game.physics.HitManager;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.TextureKey;
