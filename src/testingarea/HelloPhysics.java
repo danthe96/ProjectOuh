@@ -1,5 +1,8 @@
 package testingarea;
+import main.game.HitManager;
+import main.game.art.RocketTrail;
 import main.game.entities.controls.RocketControl;
+import main.game.entities.controls.RocketControl.RocketPhysicsControl;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.TextureKey;
@@ -17,6 +20,8 @@ import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
+import com.jme3.scene.control.Control;
 import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Cylinder;
 import com.jme3.scene.shape.Sphere;
@@ -69,6 +74,8 @@ public class HelloPhysics extends SimpleApplication {
     floor.scaleTextureCoordinates(new Vector2f(3, 6));
   }
  
+  Spatial target;
+  
   @Override
   public void simpleInitApp() {
     /** Set up Physics Game */
@@ -149,34 +156,20 @@ public class HelloPhysics extends SimpleApplication {
         mat.setColor("Color", ColorRGBA.Blue);   // set color of material to blue
         geom.setMaterial(mat);                   // set the cube's material
 
-		geom.setLocalTranslation(new Vector3f(0,10f,0));
+		geom.setLocalTranslation(new Vector3f(0,15f,0));
         rocketNode.attachChild(geom);              // make the cube appear in the scene
-        RocketControl rc = new RocketControl(cam);
+        RocketControl rc = new RocketControl(target, 2.5f);
         geom.addControl(rc);
-        
+        RocketPhysicsControl physics = rc.getRocketPhysicsControl(5f);
+        geom.addControl(physics);
+        bulletAppState.getPhysicsSpace().add(physics);
+        bulletAppState.getPhysicsSpace().addCollisionListener(new HitManager(bulletAppState.getPhysicsSpace()));
+        physics.setKinematic(true);
     
-        ParticleEmitter fire = new ParticleEmitter("Tale", com.jme3.effect.ParticleMesh.Type.Triangle, 30);
-        Material mat_red = new Material(assetManager, 
-                "Common/MatDefs/Misc/Particle.j3md");
-        mat_red.setTexture("Texture", assetManager.loadTexture(
-                "Effects/Explosion/smoketrail.png"));
-        //fire.setLocalTranslation(0, 0, 2.5f);
-        fire.setMaterial(mat_red);
-        fire.setImagesX(1); 
-        fire.rotateUpTo(new Vector3f(0,0,1));
-        fire.setImagesY(3); // 2x2 texture animation
-        fire.setEndColor(  new ColorRGBA(1f, 0f, 0f, 1f));   // red
-        fire.setStartColor(new ColorRGBA(0f, 0f, 1f, 0.5f)); // yellow
-        fire.getParticleInfluencer().setInitialVelocity(new Vector3f(0, 0, -1));
-        fire.setFacingVelocity(true);
-        fire.setStartSize(3f);
-        fire.setEndSize(3f);
-        fire.setGravity(0, 0, 0);
-        fire.setLowLife(0.5f);
-        fire.setHighLife(1.5f);
-        fire.getParticleInfluencer().setVelocityVariation(0.3f);
-        fire.addControl(rc.getRocketTrailControl());
-        rocketNode.attachChild(fire);
+        RocketTrail.loadTextures(assetManager);
+        RocketTrail trail = new RocketTrail();
+        trail.addControl(rc.getRocketTrailControl());
+        rocketNode.attachChild(trail);
         
 
         brick_phy = new RigidBodyControl(5f);
@@ -192,9 +185,9 @@ public class HelloPhysics extends SimpleApplication {
     float height = 0;
     for (int j = 0; j < 15; j++) {
       for (int i = 0; i < 6; i++) {
-        Vector3f vt =
-         new Vector3f(i * brickLength * 2 + startpt, brickHeight + height, 0);
-        makeBrick(vt);
+        Vector3f vt = new Vector3f(i * brickLength * 2 + startpt, brickHeight + height, 0);
+        if (i==3 && j == 7) makeBrick(vt, true);
+        else makeBrick(vt, false);
       }
       startpt = -startpt;
       height += 2 * brickHeight;
@@ -202,13 +195,22 @@ public class HelloPhysics extends SimpleApplication {
   }
  
   /** This method creates one individual physical brick. */
-  public void makeBrick(Vector3f loc) {
+  public void makeBrick(Vector3f loc, boolean special) {
     /** Create a brick geometry and attach to scene graph. */
     Geometry brick_geo = new Geometry("brick", box);
-    brick_geo.setMaterial(wall_mat);
+    if (special) {
+    	Material mat = new Material(assetManager,
+                "Common/MatDefs/Misc/Unshaded.j3md");  // create a simple material
+              mat.setColor("Color", ColorRGBA.Red);   // set color of material to blue
+        brick_geo.setMaterial(mat);
+        target = brick_geo;
+    }
+    else brick_geo.setMaterial(wall_mat);
     rootNode.attachChild(brick_geo);
     /** Position the brick geometry  */
     brick_geo.setLocalTranslation(loc);
+
+    
     /** Make brick physical with a mass > 0.0f. */
     brick_phy = new RigidBodyControl(2f);
     /** Add physical brick to physics space. */
