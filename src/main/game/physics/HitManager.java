@@ -1,63 +1,61 @@
 package main.game.physics;
 
-import java.util.Iterator;
 
-import main.game.entities.controls.RocketControl.RocketPhysicsControl;
 
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.PhysicsTickListener;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.bullet.collision.PhysicsCollisionObject;
-import com.jme3.bullet.collision.shapes.BoxCollisionShape;
 import com.jme3.bullet.collision.shapes.SphereCollisionShape;
-import com.jme3.bullet.control.GhostControl;
-import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.objects.PhysicsGhostObject;
 import com.jme3.bullet.objects.PhysicsRigidBody;
-import com.jme3.input.controls.Trigger;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 
+/**
+ * This class must be added to the physics space. Be careful the Listeners are a bit resource hungry. Do not use them at all times :) 
+ * The Listeners contained are PhysicsCollisionListener and PhysicsTickListener.
+ * @author daniel
+ *
+ */
 public class HitManager implements PhysicsCollisionListener, PhysicsTickListener{
 
-	float ExplosionStrength = 1f;
-	float ExplosionRadius = 1f;
+	float ExplosionStrength;
+	float ExplosionRadius;
 	PhysicsSpace physicsSpace;
-	PhysicsGhostObject ghost;
+	/**
+	 * This object is created when an explosion is triggered. After the explosion it is set to null
+	 * This means there can NEVER be two explosions at the same tick (1/60 secound). I think this should work in general.
+	 */
+	PhysicsGhostObject explodingArea;
 	
+	/**
+	 * Constructor
+	 * @param physicsSpace
+	 * bulletappstate.getPhysicsSpace()
+	 */
 	public HitManager(PhysicsSpace physicsSpace) {
 		this.physicsSpace = physicsSpace;
 		physicsSpace.addTickListener(this);
 		physicsSpace.addCollisionListener(this);
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.jme3.bullet.collision.PhysicsCollisionListener#collision(com.jme3.bullet.collision.PhysicsCollisionEvent)
+	 */
 	@Override
 	public void collision(PhysicsCollisionEvent arg0) {
-		/*if (rocket == null) {
-			if (arg0.getNodeA() != null && arg0.getNodeA().getName().equals("Rocket")) rocket = arg0.getNodeA();
-			if (arg0.getNodeB() != null && arg0.getNodeB().getName().equals("Rocket")) rocket = arg0.getNodeA();	
-			System.out.println(rocket);
-			if (rocket != null) {
-				arg0.get
-				System.out.println("boom!");
-				System.out.println(arg0.getNodeA().getName());
-				System.out.println(arg0.getNodeB().getName());
-				SphereCollisionShape shape = new SphereCollisionShape(radius);			
-				ghost = new PhysicsGhostObject(shape);
-			
-				physicsSpace.add(ghost);
-				ghost.setPhysicsLocation(rocket.getLocalTranslation());
-				physicsSpace.addTickListener(this);
-				rocket.removeFromParent();
 
-			}
-		}*/
-		
 		if (!arg0.getNodeA().equals(arg0.getNodeB())) checkForExplosion(arg0);
 	}
 
+	/**
+	 * This method checks if the two colliding object will trigger an explosion.
+	 * @param event
+	 */
 	private void checkForExplosion(PhysicsCollisionEvent event) {
+		if (isExplosionTriggered()) return;
 		Explodable ExplodableA = getExplodableControl(event.getNodeA());
 		Explodable ExplodableB = getExplodableControl(event.getNodeB());
 		if (ExplodableA != null && ExplodableB != null) {
@@ -74,19 +72,31 @@ public class HitManager implements PhysicsCollisionListener, PhysicsTickListener
 
 		
 	}
-	private void triggerExplosion(Explodable explodable, Spatial s,
+	/**
+	 * Will lead to an explosion on the next physical tick. Feel free to use this method to blow some stuff up. 
+	 * @param explodable
+	 * @param s
+	 * @param explosionRadius
+	 * @param explosionStrength
+	 */
+	public void triggerExplosion(Explodable explodable, Spatial s,
 			float explosionRadius, float explosionStrength) {
 		explodable.setTriggered(true);
 		removeSpatialFromPhysics(s);
 
 		SphereCollisionShape shape = new SphereCollisionShape(explosionRadius);			
-		ghost = new PhysicsGhostObject(shape);
-		physicsSpace.add(ghost);
-		ghost.setPhysicsLocation(s.getLocalTranslation());
+		explodingArea = new PhysicsGhostObject(shape);
+		physicsSpace.add(explodingArea);
+		explodingArea.setPhysicsLocation(s.getLocalTranslation());
 		this.ExplosionStrength = explosionStrength;
 		this.ExplosionRadius = explosionRadius;
 	}
 
+	/**
+	 * Checks if a spatial has an explodable control and can therefore explode :)
+	 * @param s
+	 * @return explodable
+	 */
 	private Explodable getExplodableControl(Spatial s) {
 		Explodable ExplodableControl=null;
 		for (int i=0; i<s.getNumControls(); i++) {
@@ -96,8 +106,11 @@ public class HitManager implements PhysicsCollisionListener, PhysicsTickListener
 		return ExplodableControl.isTriggered()? null : ExplodableControl;
 	}
 
+	/**
+	 * Will remove a spatial from the physics. But not before the next tick.
+	 * @param s
+	 */
 	private void removeSpatialFromPhysics(Spatial s) {
-		System.out.println("removing "+s.getName());
 		for (int i=0; i<s.getNumControls(); i++) {
 			try {
 				physicsSpace.remove(s.getControl(i));
@@ -109,30 +122,40 @@ public class HitManager implements PhysicsCollisionListener, PhysicsTickListener
 	
 	@Override
 	public void physicsTick(PhysicsSpace arg0, float arg1) {
-		if (ghost != null) {
-			Vector3f vector = ghost.getPhysicsLocation();
-			Vector3f vector2 = new Vector3f();
-			Vector3f vector3 = new Vector3f();
-			System.out.println("boom!!!");
-	        //get all overlapping objects and apply impulse to them
-	        for (Iterator<PhysicsCollisionObject> it = ghost.getOverlappingObjects().iterator(); it.hasNext();) {
-	            PhysicsCollisionObject physicsCollisionObject = it.next();
-	            if (physicsCollisionObject instanceof PhysicsRigidBody) {
-	                PhysicsRigidBody rBody = (PhysicsRigidBody) physicsCollisionObject;
-	                rBody.getPhysicsLocation(vector2);
-	                vector2.subtractLocal(vector);
-	                float force = ExplosionRadius - vector2.length();
-	                force *= ExplosionStrength;
-	                vector2.normalizeLocal();
-	                vector2.multLocal(force);
-	                ((PhysicsRigidBody) physicsCollisionObject).applyImpulse(vector2, Vector3f.ZERO);
-	            }
-	        }
-	        physicsSpace.remove(ghost);
-	        ghost = null;
+		if (isExplosionTriggered()) {
+			explode();
 			
 		}
 
+	}
+
+	/**
+	 * Checks whether an explosion is triggered or not.
+	 * @return bTriggered
+	 */
+	private boolean isExplosionTriggered() {
+		return explodingArea != null;
+	}
+
+	/**
+	 * Launches a triggered explosion. Never directly call this method. Use triggerExplosion instead.
+	 */
+	private void explode() {
+		Vector3f CenterofExplosion = explodingArea.getPhysicsLocation();
+		Vector3f forcevector = new Vector3f();
+		System.out.println("boom!!!");
+		//get all overlapping objects and apply impulse to them
+		for (PhysicsCollisionObject physicsCollisionObject: explodingArea.getOverlappingObjects()) {
+			((PhysicsRigidBody) physicsCollisionObject).getPhysicsLocation(forcevector);
+		        forcevector.subtractLocal(CenterofExplosion);
+		        float force = ExplosionStrength*(ExplosionRadius - forcevector.length());
+		        forcevector.normalizeLocal();
+		        forcevector.multLocal(force);
+		        ((PhysicsRigidBody) physicsCollisionObject).applyImpulse(forcevector, Vector3f.ZERO);
+		    
+		}
+		physicsSpace.remove(explodingArea);
+		explodingArea = null;
 	}
 
 	@Override

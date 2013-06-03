@@ -6,6 +6,14 @@ import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 
+/**
+ * Trail of the rocket. Ugly at the moment.
+ * Make sure to load the textures before usage.
+ * TODO improve
+ * @author daniel
+ * 
+ *
+ */
 public class RocketTrail extends ParticleEmitter{
 
 	private static Material mat_red;    

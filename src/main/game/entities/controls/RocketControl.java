@@ -13,7 +13,11 @@ import com.jme3.scene.control.AbstractControl;
 
 
 /**
- * Use this class for controlling a rocket. It will automatically move it around and stuff. It does not contain physics. Those are in the class RocketPhysicsControl. 
+ * Use this class to control a rocket. It contains two sub-classes for easy controlling.
+ * 
+ * Uses of RocketControl: 
+ * The RocketControl moves the object around. It will be controlled by RocketAI in future.
+ * 
  * @author daniel (the awesome one)
  *
  */
@@ -173,6 +177,11 @@ public class RocketControl extends AbstractControl{
 		
 	}
 	
+	/**
+	 * This class makes the rocket physical. You must add it to the physics space AND SET IT KINEMATIC. THATS IMPORTANT.
+	 * @author daniel
+	 *
+	 */
 	public class RocketPhysicsControl extends RigidBodyControl implements Explodable{
 		
 		RocketPhysicsControl(float mass) {
