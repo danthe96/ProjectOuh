@@ -1,10 +1,15 @@
 package main.game.entities.controls;
 
+import main.game.physics.HitManager;
+
 import com.jme3.bullet.collision.shapes.CollisionShape;
+import com.jme3.collision.Collidable;
+import com.jme3.collision.CollisionResults;
+import com.jme3.collision.UnsupportedCollisionException;
 import com.jme3.math.Quaternion;
 import com.jme3.scene.Spatial;
 
-public class ReaperControl extends SpacecraftControl {
+public class ReaperControl extends SpacecraftControl{
 
 	public ReaperControl(Spatial spatial, CollisionShape shape, float mass) {
 		super(spatial, shape, mass);
@@ -25,6 +30,11 @@ public class ReaperControl extends SpacecraftControl {
 	private boolean decelerating = false;
 	private boolean yawRight = false;
 	private boolean yawLeft = false;
+	private boolean isExploding = false;
+	private float explosionRadius = 10;
+	private float explosionStrength = 5;
+	private HitManager hitManager;
+	
 
 	@Override
 	public void leftRotation(float value, float tpf) {
@@ -93,6 +103,11 @@ public class ReaperControl extends SpacecraftControl {
 		// TODO Auto-generated method stub
 
 	}
+	
+	@Override
+	public Spatial getSpatial() {
+		return spatial;
+	}
 
 	@Override
 	public void update(float tpf){  // tpf = 1/fps  in seconds
@@ -123,13 +138,41 @@ public class ReaperControl extends SpacecraftControl {
 
 		setLinearVelocity(spatial.getLocalRotation().getRotationColumn(2).mult(+currentspeed));
 		super.update(tpf);
-
 	}
 
 	private void doRotation(float x, float y, float z, float w){
 		Quaternion oldOne = getPhysicsRotation();
 		Quaternion toRotate=new Quaternion(x, y, z, w);
 		setPhysicsRotation(oldOne.mult(toRotate));
+	}
+	
+	
+	@Override
+	public float getExplosionStrength() {
+		return explosionStrength;
+	}
+	
+	@Override
+	public float getExplosionRadius() {
+		return explosionRadius;
+	}
+	
+	@Override
+	public boolean isTriggered() {
+		return isExploding;
+	}
+	
+	@Override
+	public void setTriggered(boolean bvalue) {
+		isExploding = bvalue;		
+	}
+	
+	@Override
+	public int collideWith(Collidable other, CollisionResults results)
+			throws UnsupportedCollisionException {
+		  hitManager = new HitManager(this.getPhysicsSpace());
+      hitManager.triggerExplosion(this, spatial, explosionRadius, explosionStrength);
+		return 0;
 	}
 
 }

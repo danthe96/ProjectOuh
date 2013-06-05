@@ -1,7 +1,5 @@
 package main.game.physics;
 
-
-
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.PhysicsTickListener;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
@@ -14,22 +12,22 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 
 /**
- * This class must be added to the physics space. Be careful the Listeners are a bit resource hungry. Do not use them at all times :) 
+ * This class must be added to the physics space. Be careful the Listeners are a bit resource hungry. Do not use them all the time :) 
  * The Listeners contained are PhysicsCollisionListener and PhysicsTickListener.
  * @author daniel
  *
  */
 public class HitManager implements PhysicsCollisionListener, PhysicsTickListener{
 
-	float ExplosionStrength;
-	float ExplosionRadius;
+	float explosionStrength;
+	float explosionRadius;
 	PhysicsSpace physicsSpace;
 	/**
 	 * This object is created when an explosion is triggered. After the explosion it is set to null
 	 * This means there can NEVER be two explosions at the same tick (1/60 secound). I think this should work in general.
 	 */
 	PhysicsGhostObject explodingArea;
-	
+
 	/**
 	 * Constructor
 	 * @param physicsSpace
@@ -40,14 +38,15 @@ public class HitManager implements PhysicsCollisionListener, PhysicsTickListener
 		physicsSpace.addTickListener(this);
 		physicsSpace.addCollisionListener(this);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see com.jme3.bullet.collision.PhysicsCollisionListener#collision(com.jme3.bullet.collision.PhysicsCollisionEvent)
 	 */
 	@Override
 	public void collision(PhysicsCollisionEvent arg0) {
 
-		if (!arg0.getNodeA().equals(arg0.getNodeB())) checkForExplosion(arg0);
+		if (!arg0.getNodeA().equals(arg0.getNodeB())) 
+			checkForExplosion(arg0);
 	}
 
 	/**
@@ -70,7 +69,7 @@ public class HitManager implements PhysicsCollisionListener, PhysicsTickListener
 			triggerExplosion(ExplodableB, event.getNodeB(), ExplodableB.getExplosionRadius(), ExplodableB.getExplosionStrength());
 		}
 
-		
+
 	}
 	/**
 	 * Will lead to an explosion on the next physical tick. Feel free to use this method to blow some stuff up. 
@@ -88,8 +87,8 @@ public class HitManager implements PhysicsCollisionListener, PhysicsTickListener
 		explodingArea = new PhysicsGhostObject(shape);
 		physicsSpace.add(explodingArea);
 		explodingArea.setPhysicsLocation(s.getLocalTranslation());
-		this.ExplosionStrength = explosionStrength;
-		this.ExplosionRadius = explosionRadius;
+		this.explosionStrength = explosionStrength;
+		this.explosionRadius = explosionRadius;
 	}
 
 	/**
@@ -119,12 +118,12 @@ public class HitManager implements PhysicsCollisionListener, PhysicsTickListener
 		}
 		s.removeFromParent();
 	}
-	
+
 	@Override
 	public void physicsTick(PhysicsSpace arg0, float arg1) {
 		if (isExplosionTriggered()) {
 			explode();
-			
+
 		}
 
 	}
@@ -147,12 +146,12 @@ public class HitManager implements PhysicsCollisionListener, PhysicsTickListener
 		//get all overlapping objects and apply impulse to them
 		for (PhysicsCollisionObject physicsCollisionObject: explodingArea.getOverlappingObjects()) {
 			((PhysicsRigidBody) physicsCollisionObject).getPhysicsLocation(forcevector);
-		        forcevector.subtractLocal(CenterofExplosion);
-		        float force = ExplosionStrength*(ExplosionRadius - forcevector.length());
-		        forcevector.normalizeLocal();
-		        forcevector.multLocal(force);
-		        ((PhysicsRigidBody) physicsCollisionObject).applyImpulse(forcevector, Vector3f.ZERO);
-		    
+			forcevector.subtractLocal(CenterofExplosion);
+			float force = explosionStrength*(explosionRadius - forcevector.length());
+			forcevector.normalizeLocal();
+			forcevector.multLocal(force);
+			((PhysicsRigidBody) physicsCollisionObject).applyImpulse(forcevector, Vector3f.ZERO);
+
 		}
 		physicsSpace.remove(explodingArea);
 		explodingArea = null;
@@ -161,7 +160,7 @@ public class HitManager implements PhysicsCollisionListener, PhysicsTickListener
 	@Override
 	public void prePhysicsTick(PhysicsSpace arg0, float arg1) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

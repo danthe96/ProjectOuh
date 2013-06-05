@@ -13,6 +13,8 @@ import main.game.entities.userinput.SpacecraftListener;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseAxisTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
@@ -48,35 +50,36 @@ public class Core extends SimpleApplication {
 		
 		rootNode.attachChild(SkyFactory.createSky(assetManager,
 				"assets/Textures/OutputCube2.dds", false));
-
+		
 		initSpatials();
 
 		inputManager.setCursorVisible(false);//hides the cursor
 
 		//ChaseCamera chaseCam = new ChaseCamera(cam, blue);
 		//		Cam = new Camera();
-
+				
 		flyCam.setEnabled(false);
-
-		initKeys(ControlType.SPACECRAFT);
+		
+		initKeys(ControlType.SPACECRAFT);		
 	}
 
 	@Override
-	public void simpleUpdate(float tpf) {
-		inputManager.setCursorVisible(false);//not mouse
+	public void simpleUpdate(float tpf){ 
+		bulletAppState.getPhysicsSpace().update(tpf);
+		
+		inputManager.setCursorVisible(false);//no cursor
 
-		Vector3f camvec= character.getLocalTranslation();
+		Vector3f camvec = character.getLocalTranslation();
 		//	  Quaternion q, p;
 
-		if (camBehindChar){      // has no impact on game
-
+		if (camBehindChar){
+			
 			character.localToWorld(new Vector3f(0, 0, -CAM_DISTANCE_BEHIND_CHAR),camvec);
 			//	   p = new Quaternion(0, 0, 1, +CAM_DISTANCE_BEHIND_CHAR); //-cam* or +cam* please test
 			//	   p.mult(character.getLocalRotation());
 			//	   q.addLocal(p);
 		}
-
-
+		
 		cam.setLocation(camvec);
 		cam.setRotation(character.getLocalRotation());
 	}
@@ -93,25 +96,24 @@ public class Core extends SimpleApplication {
 
 		Spatial box = new Geometry("Box",new Box(new Vector3f(25,-10,75), new Vector3f(30,-5,80)));
 		box.setMaterial(mat_brick);
+		
+		Node spaceShip = (Node)assetManager.loadModel("assets/Models/testship.j3o");
+		spaceShip.setMaterial(mat_brick);
+		
+		Node dummySpaceShip = spaceShip.clone(true);
+		dummySpaceShip.setLocalTranslation(0, 0, 100);
 
-		Node blue = (Node)assetManager.loadModel("assets/Models/testship.j3o");
-		System.out.println(blue.getChildren());
-		blue.setMaterial(mat_brick);
-
-		Node blue2 = blue.clone(true);
-		blue2.setLocalTranslation(0, 0, 100);
-
-		spaceControl = new ReaperControl(blue, 6);
-		blue.addControl(spaceControl);
+		spaceControl = new ReaperControl(spaceShip, CollisionShapeFactory.createMeshShape(spaceShip), 6);
+		spaceShip.addControl(spaceControl);
 		spaceControl.setGravity(new Vector3f(0f, 0f, 0.0001f));
 		bulletAppState.getPhysicsSpace().add(spaceControl);
-		rootNode.attachChild(blue);
-		rootNode.attachChild(blue2);
+		rootNode.attachChild(spaceShip);
+		rootNode.attachChild(dummySpaceShip);
 		rootNode.attachChild(box);
 
-		character = blue;
+		character = spaceShip;
 	}
-
+	
 	private void initKeys(ControlType controlType){
 		inputManager.clearMappings();
 
@@ -151,7 +153,7 @@ public class Core extends SimpleApplication {
 			inputManager.addListener(groundListener.analogListener, analogKey.toArray(new String[analogKey.size()]));
 		}
 
-	}
+	}	
 	
 	private enum ControlType {
 		SPACECRAFT,GROUND,MACHINE
