@@ -113,11 +113,11 @@ public class ReaperControl extends SpacecraftControl{
 	public void update(float tpf){  // tpf = 1/fps  in seconds
 
 		if (accelerating && (currentspeed <= 30)) {
-			currentspeed += acceleration * tpf; // 5 m/s²
+			currentspeed += acceleration * tpf; // 5 m/sï¿½
 			System.out.println("accelerating " + currentspeed);
 		} else {
 			if (decelerating && (currentspeed >= -30)) {
-				currentspeed -= acceleration * tpf; // 5 m/s²
+				currentspeed -= acceleration * tpf; // 5 m/sï¿½
 				System.out.println("decelerating " + currentspeed);
 			} else {
 				if (currentspeed > 0)
@@ -167,12 +167,6 @@ public class ReaperControl extends SpacecraftControl{
 		isExploding = bvalue;		
 	}
 	
-	@Override
-	public int collideWith(Collidable other, CollisionResults results)
-			throws UnsupportedCollisionException {
-		  hitManager = new HitManager(this.getPhysicsSpace());
-      hitManager.triggerExplosion(this, spatial, explosionRadius, explosionStrength);
-		return 0;
-	}
+
 
 }

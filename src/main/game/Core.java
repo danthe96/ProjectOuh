@@ -10,6 +10,7 @@ import main.game.entities.controls.ReaperControl;
 import main.game.entities.controls.SpacecraftControl;
 import main.game.entities.userinput.GroundListener;
 import main.game.entities.userinput.SpacecraftListener;
+import main.game.physics.HitManager;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
@@ -29,6 +30,7 @@ import com.jme3.util.SkyFactory;
 public class Core extends SimpleApplication {
 	private Settings settings;
 	private BulletAppState bulletAppState;
+	private HitManager hitManager;
 	
 	//this is the body/machine, where you are inside, which you are playing
 	private Spatial character;	
@@ -46,6 +48,8 @@ public class Core extends SimpleApplication {
 	public void simpleInitApp() {
 		bulletAppState= new BulletAppState();
 		stateManager.attach(bulletAppState);
+		hitManager = new HitManager(bulletAppState.getPhysicsSpace());
+		
 		settings = new Settings();
 		
 		rootNode.attachChild(SkyFactory.createSky(assetManager,
@@ -61,6 +65,8 @@ public class Core extends SimpleApplication {
 		flyCam.setEnabled(false);
 		
 		initKeys(ControlType.SPACECRAFT);		
+		
+
 	}
 
 	@Override

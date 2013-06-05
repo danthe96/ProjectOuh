@@ -11,7 +11,7 @@ import com.jme3.scene.control.Control;
 
 public abstract class SpacecraftControl extends RigidBodyControl 
 		implements
-			Control, Explodable, Collidable {
+			Control, Explodable {
 
 	public SpacecraftControl(Spatial spatial,CollisionShape shape, float mass) {
 		super(shape, mass);
