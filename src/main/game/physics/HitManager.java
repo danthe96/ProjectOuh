@@ -44,7 +44,7 @@ public class HitManager implements PhysicsCollisionListener, PhysicsTickListener
 	 */
 	@Override
 	public void collision(PhysicsCollisionEvent arg0) {
-
+//		System.out.println(arg0.getNodeA() + "" + arg0.getPositionWorldOnA() + "   " + arg0.getNodeB() + "" + arg0.getPositionWorldOnB());
 		if (!arg0.getNodeA().equals(arg0.getNodeB())) 
 			checkForExplosion(arg0);
 	}
@@ -97,6 +97,8 @@ public class HitManager implements PhysicsCollisionListener, PhysicsTickListener
 	 * @return explodable
 	 */
 	private Explodable getExplodableControl(Spatial s) {
+		if(s == null)
+			return null;		
 		Explodable ExplodableControl=null;
 		for (int i=0; i<s.getNumControls(); i++) {
 			if (s.getControl(i) instanceof Explodable) ExplodableControl = (Explodable) s.getControl(i);

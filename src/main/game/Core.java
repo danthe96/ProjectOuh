@@ -63,10 +63,9 @@ public class Core extends SimpleApplication {
 		//		Cam = new Camera();
 				
 		flyCam.setEnabled(false);
+		bulletAppState.setDebugEnabled(true);
 		
 		initKeys(ControlType.SPACECRAFT);		
-		
-
 	}
 
 	@Override
@@ -100,23 +99,27 @@ public class Core extends SimpleApplication {
 		mat_brick.setTexture("ColorMap", 
 				assetManager.loadTexture("Textures/Terrain/BrickWall/BrickWall.jpg"));
 
-		Spatial box = new Geometry("Box",new Box(new Vector3f(25,-10,75), new Vector3f(30,-5,80)));
+		Spatial box = new Geometry("Box",new Box(new Vector3f(-2.5f,-2.5f,-2.5f), new Vector3f(2.5f,2.5f,2.5f)));
 		box.setMaterial(mat_brick);
+		rootNode.attachChild(box);
+		box.setLocalTranslation(25f,-10f,75f);
+		RigidBodyControl box_rbc = new RigidBodyControl(0f);
+		box.addControl(box_rbc);
+		bulletAppState.getPhysicsSpace().add(box_rbc);
 		
 		Node spaceShip = (Node)assetManager.loadModel("assets/Models/testship.j3o");
 		spaceShip.setMaterial(mat_brick);
+		rootNode.attachChild(spaceShip);
 		
 		Node dummySpaceShip = spaceShip.clone(true);
+		rootNode.attachChild(dummySpaceShip);
 		dummySpaceShip.setLocalTranslation(0, 0, 100);
 
 		spaceControl = new ReaperControl(spaceShip, CollisionShapeFactory.createMeshShape(spaceShip), 6);
 		spaceShip.addControl(spaceControl);
-		spaceControl.setGravity(new Vector3f(0f, 0f, 0.0001f));
 		bulletAppState.getPhysicsSpace().add(spaceControl);
-		rootNode.attachChild(spaceShip);
-		rootNode.attachChild(dummySpaceShip);
-		rootNode.attachChild(box);
-
+    spaceControl.setGravity(new Vector3f(0f, 0f, 0.0001f));
+		
 		character = spaceShip;
 	}
 	

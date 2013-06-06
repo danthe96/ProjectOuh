@@ -4,7 +4,6 @@ import main.game.physics.Explodable;
 
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
-import com.jme3.collision.Collidable;
 
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.Control;
