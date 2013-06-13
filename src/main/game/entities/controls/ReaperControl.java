@@ -23,8 +23,8 @@ public class ReaperControl extends SpacecraftControl{
 
 	// see http://www.esparacing.com/sport_pilot/how%20to%20control%20an%20aircraft.htm
 	private static final float SENSITIVITY_X = 500f; // aka "pitch"
-	private static final float SENSITIVITY_Y = 500f; // aka "roll"
-	private static final float SENSITIVITY_Z = 10000f; // aka "yaw"; very low, we want to increase difficulty ;-)
+	private static final float SENSITIVITY_Z = 500f; // aka "roll"
+	private static final float SENSITIVITY_y = 10000f; // aka "yaw"; very low, we want to increase difficulty ;-)
 	private float acceleration = 5;
 	private float currentspeed = 0;
 	private boolean accelerating = false;
@@ -39,23 +39,23 @@ public class ReaperControl extends SpacecraftControl{
 
 	@Override
 	public void leftRotation(float value, float tpf) {
-		System.out.println("left");
-		doRotation(new float[]{0,0f,-value*tpf});
+		System.out.println(value);
+		doRotation(new float[]{0f,0f,-value*tpf*SENSITIVITY_Z});
 	}
 
 	@Override
 	public void rightRotation(float value, float tpf) {
-		doRotation(new float[]{0,0,value*tpf});
+		doRotation(new float[]{0f,0f,value*tpf*SENSITIVITY_Z});
 	}
 
 	@Override
 	public void upRotation(float value, float tpf) {
-		doRotation(new float[]{-value*tpf,0f,0f});
+		doRotation(new float[]{-value*SENSITIVITY_X*tpf,0f,0f});
 	}
 
 	@Override
 	public void downRotation(float value, float tpf) {
-		doRotation(new float[]{value*tpf,0f,0f});
+		doRotation(new float[]{value*SENSITIVITY_X*tpf,0f,0f});
 	}
 
 	@Override
