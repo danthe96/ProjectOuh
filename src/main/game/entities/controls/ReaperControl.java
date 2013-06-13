@@ -6,6 +6,7 @@ import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.collision.Collidable;
 import com.jme3.collision.CollisionResults;
 import com.jme3.collision.UnsupportedCollisionException;
+import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.scene.Spatial;
 
@@ -38,22 +39,23 @@ public class ReaperControl extends SpacecraftControl{
 
 	@Override
 	public void leftRotation(float value, float tpf) {
-		doRotation(0, value*mass, 1900*tpf, SENSITIVITY_X);
+		System.out.println("left");
+		doRotation(new float[]{0,0f,-value*tpf});
 	}
 
 	@Override
 	public void rightRotation(float value, float tpf) {
-		doRotation(0, value*mass, 1900*tpf, -SENSITIVITY_X);
+		doRotation(new float[]{0,0,value*tpf});
 	}
 
 	@Override
 	public void upRotation(float value, float tpf) {
-		doRotation(1900*tpf, 0, value*mass, -SENSITIVITY_Y);
+		doRotation(new float[]{-value*tpf,0f,0f});
 	}
 
 	@Override
 	public void downRotation(float value, float tpf) {
-		doRotation(1900*tpf, 0, value*mass, SENSITIVITY_Y);
+		doRotation(new float[]{value*tpf,0f,0f});
 	}
 
 	@Override
@@ -69,17 +71,11 @@ public class ReaperControl extends SpacecraftControl{
 	@Override
 	public void accelerate() {
 		accelerating=!accelerating;
-		//currentspeed+=velocity;
-		//setLinearVelocity(spatial.getLocalRotation().getRotationColumn(0).mult(+currentspeed));
-
 	}
 
 	@Override
 	public void decelerate() {
 		decelerating=!decelerating;
-		//	currentspeed-=velocity;
-		//	setLinearVelocity(spatial.getLocalRotation().getRotationColumn(0).mult(-currentspeed));
-
 	}
 
 	@Override
@@ -94,13 +90,11 @@ public class ReaperControl extends SpacecraftControl{
 
 	@Override
 	public void primaryShoot() {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void secondShoot() {
-		// TODO Auto-generated method stub
 
 	}
 	
@@ -129,17 +123,22 @@ public class ReaperControl extends SpacecraftControl{
 		}
 
 		if(yawRight){
-			doRotation(0, 1900*tpf, 0, -SENSITIVITY_Z);
+			doRotation(new float[]{0f,-1f*tpf,0f});
 		}
 
 		if(yawLeft){
-			doRotation(0, 1900*tpf, 0, SENSITIVITY_Z);
+			doRotation(new float[]{0f,1f*tpf,0f});
 		}
 
 		setLinearVelocity(spatial.getLocalRotation().getRotationColumn(2).mult(+currentspeed));
 		super.update(tpf);
 	}
 
+	private void doRotation(float[] angles){
+		Quaternion oldOne = getPhysicsRotation();
+		Quaternion toRotate=new Quaternion(angles);
+		setPhysicsRotation(oldOne.mult(toRotate));
+	}
 	private void doRotation(float x, float y, float z, float w){
 		Quaternion oldOne = getPhysicsRotation();
 		Quaternion toRotate=new Quaternion(x, y, z, w);
