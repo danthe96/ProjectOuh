@@ -3,10 +3,6 @@ package main.game.entities.controls;
 import main.game.physics.HitManager;
 
 import com.jme3.bullet.collision.shapes.CollisionShape;
-import com.jme3.collision.Collidable;
-import com.jme3.collision.CollisionResults;
-import com.jme3.collision.UnsupportedCollisionException;
-import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.scene.Spatial;
 
@@ -22,9 +18,9 @@ public class ReaperControl extends SpacecraftControl{
 	}
 
 	// see http://www.esparacing.com/sport_pilot/how%20to%20control%20an%20aircraft.htm
-	private static final float SENSITIVITY_X = 500f; // aka "pitch"
-	private static final float SENSITIVITY_Z = 500f; // aka "roll"
-	private static final float SENSITIVITY_y = 10000f; // aka "yaw"; very low, we want to increase difficulty ;-)
+	private static final float SENSITIVITY_X = 2000f; // aka "pitch"
+	private static final float SENSITIVITY_Z = 2000f; // aka "roll"
+	private static final float SENSITIVITY_Y = .5f; // aka "yaw"; very low, we want to increase difficulty ;-)
 	private float acceleration = 5;
 	private float currentspeed = 0;
 	private boolean accelerating = false;
@@ -35,17 +31,17 @@ public class ReaperControl extends SpacecraftControl{
 	private float explosionRadius = 10;
 	private float explosionStrength = 5;
 	private HitManager hitManager;
-	
+
 
 	@Override
 	public void leftRotation(float value, float tpf) {
-		System.out.println(value);
-		doRotation(new float[]{0f,0f,-value*tpf*SENSITIVITY_Z});
+		//		System.out.println(value);
+		doRotation(new float[]{0f,0f,value*tpf*SENSITIVITY_Z});
 	}
 
 	@Override
 	public void rightRotation(float value, float tpf) {
-		doRotation(new float[]{0f,0f,value*tpf*SENSITIVITY_Z});
+		doRotation(new float[]{0f,0f,-value*tpf*SENSITIVITY_Z});
 	}
 
 	@Override
@@ -97,7 +93,7 @@ public class ReaperControl extends SpacecraftControl{
 	public void secondShoot() {
 
 	}
-	
+
 	@Override
 	public Spatial getSpatial() {
 		return spatial;
@@ -107,12 +103,12 @@ public class ReaperControl extends SpacecraftControl{
 	public void update(float tpf){  // tpf = 1/fps  in seconds
 
 		if (accelerating && (currentspeed <= 30)) {
-			currentspeed += acceleration * tpf; // 5 m/sï¿½
-			System.out.println("accelerating " + currentspeed);
+			currentspeed += acceleration * tpf; // 5 m/s²
+			//			System.out.println("accelerating " + currentspeed);
 		} else {
 			if (decelerating && (currentspeed >= -30)) {
-				currentspeed -= acceleration * tpf; // 5 m/sï¿½
-				System.out.println("decelerating " + currentspeed);
+				currentspeed -= acceleration * tpf; // 5 m/s²
+				//				System.out.println("decelerating " + currentspeed);
 			} else {
 				if (currentspeed > 0)
 					currentspeed -= 1.5 * tpf;
@@ -123,11 +119,11 @@ public class ReaperControl extends SpacecraftControl{
 		}
 
 		if(yawRight){
-			doRotation(new float[]{0f,-1f*tpf,0f});
+			doRotation(new float[]{0f,-SENSITIVITY_Y*tpf,0f});
 		}
 
 		if(yawLeft){
-			doRotation(new float[]{0f,1f*tpf,0f});
+			doRotation(new float[]{0f,SENSITIVITY_Y*tpf,0f});
 		}
 
 		setLinearVelocity(spatial.getLocalRotation().getRotationColumn(2).mult(+currentspeed));
@@ -136,36 +132,30 @@ public class ReaperControl extends SpacecraftControl{
 
 	private void doRotation(float[] angles){
 		Quaternion oldOne = getPhysicsRotation();
-		Quaternion toRotate=new Quaternion(angles);
+		Quaternion toRotate = new Quaternion(angles);
 		setPhysicsRotation(oldOne.mult(toRotate));
-	}
-	private void doRotation(float x, float y, float z, float w){
-		Quaternion oldOne = getPhysicsRotation();
-		Quaternion toRotate=new Quaternion(x, y, z, w);
-		setPhysicsRotation(oldOne.mult(toRotate));
-	}
-	
-	
+	}	
+
 	@Override
 	public float getExplosionStrength() {
 		return explosionStrength;
 	}
-	
+
 	@Override
 	public float getExplosionRadius() {
 		return explosionRadius;
 	}
-	
+
 	@Override
 	public boolean isTriggered() {
 		return isExploding;
 	}
-	
+
 	@Override
 	public void setTriggered(boolean bvalue) {
 		isExploding = bvalue;		
 	}
-	
+
 
 
 }
