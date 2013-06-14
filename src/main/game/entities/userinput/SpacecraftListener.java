@@ -35,13 +35,13 @@ public class SpacecraftListener {
 	public AnalogListener analogListener = new AnalogListener() {
 		public void onAnalog(String name, float value, float tpf) {
 			if (name.equals("ROTATE_RIGHT") && value > 0) {
-				spacecraftControl.rightRotation(value, tpf);
+				spacecraftControl.rightRotation(value);
 			} else if (name.equals("ROTATE_LEFT") && value > 0) {
-				spacecraftControl.leftRotation(value, tpf);
+				spacecraftControl.leftRotation(value);
 			} else if (name.equals("STEER_UP") && value > 0) {
-				spacecraftControl.upRotation(value, tpf);
+				spacecraftControl.upRotation(value);
 			} else if (name.equals("STEER_DOWN") && value > 0) {
-				spacecraftControl.downRotation(value, tpf);
+				spacecraftControl.downRotation(value);
 			}
 		}
 	};

@@ -1,7 +1,5 @@
 package main.game.entities.controls;
 
-import main.game.physics.HitManager;
-
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.math.Quaternion;
 import com.jme3.scene.Spatial;
@@ -18,8 +16,8 @@ public class ReaperControl extends SpacecraftControl{
 	}
 
 	// see http://www.esparacing.com/sport_pilot/how%20to%20control%20an%20aircraft.htm
-	private static final float SENSITIVITY_X = 2000f; // aka "pitch"
-	private static final float SENSITIVITY_Z = 2000f; // aka "roll"
+	private static final float SENSITIVITY_X = 1.2f; // aka "pitch"
+	private static final float SENSITIVITY_Z = 1.2f; // aka "roll"
 	private static final float SENSITIVITY_Y = .5f; // aka "yaw"; very low, we want to increase difficulty ;-)
 	private float acceleration = 5;
 	private float currentspeed = 0;
@@ -30,28 +28,27 @@ public class ReaperControl extends SpacecraftControl{
 	private boolean isExploding = false;
 	private float explosionRadius = 10;
 	private float explosionStrength = 5;
-	private HitManager hitManager;
 
 
 	@Override
-	public void leftRotation(float value, float tpf) {
+	public void leftRotation(float value) {
 		//		System.out.println(value);
-		doRotation(new float[]{0f,0f,value*tpf*SENSITIVITY_Z});
+		doRotation(new float[]{0f,0f,value*SENSITIVITY_Z});
 	}
 
 	@Override
-	public void rightRotation(float value, float tpf) {
-		doRotation(new float[]{0f,0f,-value*tpf*SENSITIVITY_Z});
+	public void rightRotation(float value) {
+		doRotation(new float[]{0f,0f,-value*SENSITIVITY_Z});
 	}
 
 	@Override
-	public void upRotation(float value, float tpf) {
-		doRotation(new float[]{-value*SENSITIVITY_X*tpf,0f,0f});
+	public void upRotation(float value) {
+		doRotation(new float[]{-value*SENSITIVITY_X,0f,0f});
 	}
 
 	@Override
-	public void downRotation(float value, float tpf) {
-		doRotation(new float[]{value*SENSITIVITY_X*tpf,0f,0f});
+	public void downRotation(float value) {
+		doRotation(new float[]{value*SENSITIVITY_X,0f,0f});
 	}
 
 	@Override

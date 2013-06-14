@@ -21,10 +21,10 @@ public abstract class SpacecraftControl extends RigidBodyControl
 		super(mass);
 	}
 
-	public abstract void leftRotation(float value, float tpf);
-	public abstract void rightRotation(float value, float tpf);
-	public abstract void upRotation(float value, float tpf);
-	public abstract void downRotation(float value, float tpf);
+	public abstract void leftRotation(float value);
+	public abstract void rightRotation(float value);
+	public abstract void upRotation(float value);
+	public abstract void downRotation(float value);
 	public abstract void accelerate();
 	public abstract void decelerate();
 	public abstract void yawRight();
