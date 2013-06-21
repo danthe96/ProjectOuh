@@ -59,6 +59,7 @@ public class Settings {
 	}
 
 	private void readSettings() { // Reading settings from settings file
+		new File("settings.txt").delete();
 		try {
 			Scanner scanner = new Scanner(new File("settings.txt"));
 			String option = scanner.nextLine().trim();

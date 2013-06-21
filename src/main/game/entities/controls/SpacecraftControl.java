@@ -1,14 +1,16 @@
 package main.game.entities.controls;
 
+import main.game.physics.Explodable;
+
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
 
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.Control;
 
-public abstract class SpacecraftControl extends RigidBodyControl
+public abstract class SpacecraftControl extends RigidBodyControl 
 		implements
-			Control {
+			Control, Explodable {
 
 	public SpacecraftControl(Spatial spatial,CollisionShape shape, float mass) {
 		super(shape, mass);
@@ -31,6 +33,7 @@ public abstract class SpacecraftControl extends RigidBodyControl
 	public abstract void lift();
 	public abstract void primaryShoot();
 	public abstract void secondShoot();
+	public abstract Spatial getSpatial();
 
 	@Override
 	public void update(float tpf) {
