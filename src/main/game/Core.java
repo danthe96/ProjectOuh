@@ -1,5 +1,6 @@
 package main.game;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,10 +22,13 @@ import com.jme3.input.controls.MouseAxisTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
+import com.jme3.network.Client;
+import com.jme3.network.Network;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
+import com.jme3.system.JmeContext;
 import com.jme3.util.SkyFactory;
 
 public class Core extends SimpleApplication {
@@ -40,8 +44,8 @@ public class Core extends SimpleApplication {
 	private boolean camBehindChar = false;
 	
 	public static void main(String[] args) {
-		Core coreapp = new Core();
-		coreapp.start();
+	    Core app = new Core();
+	    app.start(JmeContext.Type.Display); // standard display type
 	}
 
 	@Override
@@ -65,8 +69,20 @@ public class Core extends SimpleApplication {
 		flyCam.setEnabled(false);
 		bulletAppState.setDebugEnabled(true);
 		
-		initKeys(ControlType.SPACECRAFT);		
+		initKeys(ControlType.SPACECRAFT);	
+		
+		/*
+		Client myClient;
+		try {
+			myClient = Network.connectToServer("localhost", 6143);
+		} catch (IOException e) {
+			System.out.println("error while connecting to server!");
+			e.printStackTrace();
+		}
+		myClient.start();
+		*/
 	}
+
 
 	@Override
 	public void simpleUpdate(float tpf){ 
