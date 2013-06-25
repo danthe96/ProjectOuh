@@ -38,7 +38,7 @@ public class Core extends SimpleApplication {
 	private SpacecraftControl spaceControl;
 	private GroundControl groundControl;
 	private boolean camBehindChar = false;
-
+	
 	public static void main(String[] args) {
 		Core coreapp = new Core();
 		coreapp.start();
