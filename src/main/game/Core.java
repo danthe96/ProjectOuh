@@ -45,7 +45,7 @@ public class Core extends SimpleApplication {
 	
 	public static void main(String[] args) {
 	    Core app = new Core();
-	    app.start(JmeContext.Type.Display); // standard display type
+	    app.start(); // standard display type
 	}
 
 	@Override
