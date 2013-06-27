@@ -5,6 +5,8 @@
 
 package main.game.server;
 
+import main.game.net.utils.messagetype;
+
 public class client {
 	
 	//private static final boolean debug_Mode = true;
@@ -17,8 +19,12 @@ public class client {
 		connected = false;
 	}
 
-	public boolean isConnected(){
+	public boolean isConnected() {
 		return connected;
+	}
+	
+	public void disconnect() {
+		
 	}
 	
 	// "bind" an incoming login to a client
@@ -28,8 +34,15 @@ public class client {
 		System.out.println(nickname + " logging in ...");
 		
 		
-		//if we reach this point, there is no Problem
+		//if we reach this point, there was/is no Problem
+		connected = true;
 		return true;
+	}
+	
+	//send a message to the client
+	public int sendData(messagetype message) {
+		
+		return 0; //everything ok!
 	}
 	
 }

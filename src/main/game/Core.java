@@ -45,7 +45,7 @@ public class Core extends SimpleApplication {
 	
 	public static void main(String[] args) {
 	    Core app = new Core();
-	    app.start(JmeContext.Type.Display); // standard display type
+	    app.start(); // standard display type
 	}
 
 	@Override
@@ -71,8 +71,8 @@ public class Core extends SimpleApplication {
 		
 		initKeys(ControlType.SPACECRAFT);	
 		
-		/*
-		Client myClient;
+
+		Client myClient=null;
 		try {
 			myClient = Network.connectToServer("localhost", 6143);
 		} catch (IOException e) {
@@ -80,7 +80,7 @@ public class Core extends SimpleApplication {
 			e.printStackTrace();
 		}
 		myClient.start();
-		*/
+
 	}
 
 
