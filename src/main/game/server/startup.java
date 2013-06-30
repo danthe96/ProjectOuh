@@ -23,6 +23,10 @@ public class startup extends SimpleApplication {
 	private int clientCount;
 	private int port;
 
+	
+	
+	private serverlistener listener;
+	
 	@Override
 	public void simpleInitApp() {
 		int result;
@@ -69,6 +73,10 @@ public class startup extends SimpleApplication {
 		if (debug_Mode) System.out.println("start Server ...");
 		myServer.start();
 		if (debug_Mode) System.out.println("success!");
+		
+		if (debug_Mode) System.out.println("register serverlistener:");
+		listener = new serverlistener(myServer);
+		myServer.addMessageListener(listener, message.class);
 		
 		
 		//success, return 0

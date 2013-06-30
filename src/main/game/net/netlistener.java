@@ -32,6 +32,7 @@ public class netlistener implements MessageListener<Client> {
 	    		System.out.println("Position: " + newPos.getPosition());
 	    		System.out.println("Rotation: " + newPos.getRotation());
 	    		System.out.println("Speed:    " + newPos.getSpeed());
+	    		
 	    	}
 	    	else if (Input.getMessagetype() == messagetype.ping){
 	    		
