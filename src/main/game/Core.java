@@ -11,6 +11,7 @@ import main.game.entities.controls.ReaperControl;
 import main.game.entities.controls.SpacecraftControl;
 import main.game.entities.userinput.GroundListener;
 import main.game.entities.userinput.SpacecraftListener;
+import main.game.net.netlistener;
 import main.game.physics.HitManager;
 
 import com.jme3.app.SimpleApplication;
@@ -42,6 +43,8 @@ public class Core extends SimpleApplication {
 	private SpacecraftControl spaceControl;
 	private GroundControl groundControl;
 	private boolean camBehindChar = false;
+	
+	private netlistener NetListener;
 	
 	public static void main(String[] args) {
 	    Core app = new Core();

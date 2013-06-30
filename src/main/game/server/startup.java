@@ -2,9 +2,12 @@ package main.game.server;
 
 import java.io.IOException;
 
+import main.game.net.message;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.network.Network;
 import com.jme3.network.Server;
+import com.jme3.network.serializing.Serializer;
 import com.jme3.system.JmeContext;
 
 public class startup extends SimpleApplication {
@@ -42,6 +45,9 @@ public class startup extends SimpleApplication {
 		
 		// TODO fill the setting Vars!
 		
+
+		Serializer.registerClass(message.class);
+		
 		//dummy values:
 		clientCount = 42;
 		port = 4242;
@@ -60,8 +66,10 @@ public class startup extends SimpleApplication {
 			e.printStackTrace();
 			return 1;
 		}
+		if (debug_Mode) System.out.println("start Server ...");
 		myServer.start();
 		if (debug_Mode) System.out.println("success!");
+		
 		
 		//success, return 0
 		return 0;
