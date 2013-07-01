@@ -83,7 +83,8 @@ public class HelloPhysics extends SimpleApplication {
 
 	@Override
 	public void simpleInitApp() {
-
+		rootNode.attachChild(SkyFactory.createSky(assetManager,
+				"assets/Textures/OutputCube2.dds", false));
 		
 		
 		/** Set up Physics Game */
@@ -168,7 +169,7 @@ public class HelloPhysics extends SimpleApplication {
 		mat.setColor("Color", ColorRGBA.Blue);   // set color of material to blue
 		geom.setMaterial(mat);                   // set the cube's material
 
-		geom.setLocalTranslation(new Vector3f(0,15f,10f));
+		geom.setLocalTranslation(new Vector3f(0,15f,-1000f));
 		rocketNode.attachChild(geom);              // make the cube appear in the scene
 		RocketControl rc = new RocketControl(target, 2.5f);
 		geom.addControl(rc);
