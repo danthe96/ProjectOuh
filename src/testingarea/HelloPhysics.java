@@ -1,4 +1,6 @@
 package testingarea;
+import main.game.art.EmbellishmentManager;
+import main.game.art.ExplosionView;
 import main.game.art.RocketTrail;
 import main.game.entities.controls.RocketControl;
 import main.game.entities.controls.RocketControl.RocketPhysicsControl;
@@ -18,6 +20,7 @@ import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -48,6 +51,8 @@ public class HelloPhysics extends SimpleApplication {
 	Material wall_mat;
 	Material stone_mat;
 	Material floor_mat;
+	
+	EmbellishmentManager embi;
 
 	/** Prepare geometries and physical nodes for bricks and cannon balls. */
 	private RigidBodyControl    brick_phy;
@@ -78,6 +83,9 @@ public class HelloPhysics extends SimpleApplication {
 
 	@Override
 	public void simpleInitApp() {
+
+		
+		
 		/** Set up Physics Game */
 		bulletAppState = new BulletAppState();
 		stateManager.attach(bulletAppState);
@@ -98,6 +106,10 @@ public class HelloPhysics extends SimpleApplication {
 		initRocket();
 	}
 
+	@Override
+	 public void simpleRender(RenderManager rm) {
+		embi.updateRender();
+	}
 	/**
 	 * Every time the shoot action is triggered, a new cannon ball is produced.
 	 * The ball is set up to fly from the camera position in the camera direction.
@@ -156,14 +168,16 @@ public class HelloPhysics extends SimpleApplication {
 		mat.setColor("Color", ColorRGBA.Blue);   // set color of material to blue
 		geom.setMaterial(mat);                   // set the cube's material
 
-		geom.setLocalTranslation(new Vector3f(0,15f,-1000f));
+		geom.setLocalTranslation(new Vector3f(0,15f,10f));
 		rocketNode.attachChild(geom);              // make the cube appear in the scene
 		RocketControl rc = new RocketControl(target, 2.5f);
 		geom.addControl(rc);
 		RocketPhysicsControl physics = rc.getRocketPhysicsControl(5f);
 		geom.addControl(physics);
+		embi = new EmbellishmentManager(rootNode, assetManager, renderManager, viewPort);
+		 
 		bulletAppState.getPhysicsSpace().add(physics);
-		bulletAppState.getPhysicsSpace().addCollisionListener(new HitManager(bulletAppState.getPhysicsSpace()));
+		bulletAppState.getPhysicsSpace().addCollisionListener(new HitManager(bulletAppState.getPhysicsSpace(), embi));
 		physics.setKinematic(true);
 
 		RocketTrail.loadTextures(assetManager);

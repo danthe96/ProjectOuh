@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import main.Settings;
+import main.game.art.EmbellishmentManager;
 import main.game.entities.controls.GroundControl;
 import main.game.entities.controls.ReaperControl;
 import main.game.entities.controls.SpacecraftControl;
@@ -38,6 +39,14 @@ public class Core extends SimpleApplication {
 	private SpacecraftControl spaceControl;
 	private GroundControl groundControl;
 	private boolean camBehindChar = false;
+	
+	
+	
+	/**
+	 * 
+	 * @author danielwenzel
+	 */
+	private EmbellishmentManager embi;
 
 	public static void main(String[] args) {
 		Core coreapp = new Core();
@@ -48,7 +57,8 @@ public class Core extends SimpleApplication {
 	public void simpleInitApp() {
 		bulletAppState= new BulletAppState();
 		stateManager.attach(bulletAppState);
-		hitManager = new HitManager(bulletAppState.getPhysicsSpace());
+		embi = new EmbellishmentManager(rootNode,assetManager, renderManager, viewPort);
+		hitManager = new HitManager(bulletAppState.getPhysicsSpace(), embi);
 		
 		settings = new Settings();
 		
