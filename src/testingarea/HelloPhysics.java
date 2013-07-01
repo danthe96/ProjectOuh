@@ -91,7 +91,7 @@ public class HelloPhysics extends SimpleApplication {
 		bulletAppState = new BulletAppState();
 		stateManager.attach(bulletAppState);
 		//bulletAppState.getPhysicsSpace().enableDebug(assetManager);
-
+		bulletAppState.getPhysicsSpace().setGravity(Vector3f.ZERO);
 		/** Configure cam to look at scene */
 		cam.setLocation(new Vector3f(0, 4f, 6f));
 		cam.lookAt(new Vector3f(2, 2, 0), Vector3f.UNIT_Y);
@@ -102,7 +102,7 @@ public class HelloPhysics extends SimpleApplication {
 		/** Initialize the scene, materials, and physics space */
 		initMaterials();
 		initWall();
-		initFloor();
+		//initFloor();
 		initCrossHairs();
 		initRocket();
 	}
@@ -227,7 +227,7 @@ public class HelloPhysics extends SimpleApplication {
 
 
 		/** Make brick physical with a mass > 0.0f. */
-		brick_phy = new RigidBodyControl(2f);
+		brick_phy = new RigidBodyControl(16f);
 		/** Add physical brick to physics space. */
 		brick_geo.addControl(brick_phy);
 		bulletAppState.getPhysicsSpace().add(brick_phy);
