@@ -260,7 +260,8 @@ public class HelloPhysics extends SimpleApplication {
 		ch.setSize(guiFont.getCharSet().getRenderedSize() * 2);
 		ch.setText("+");        // fake crosshairs :)
 		ch.setLocalTranslation( // center
-				settings.getWidth() / 2 - guiFont.getCharSet().getRenderedSize() / 3 * 2,
+				settings.getWidth() / 2
+						- guiFont.getCharSet().getRenderedSize() / 3 * 2,
 				settings.getHeight() / 2 + ch.getLineHeight() / 2, 0);
 		guiNode.attachChild(ch);
 	}

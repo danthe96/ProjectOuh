@@ -5,6 +5,7 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 import com.jme3.math.ColorRGBA;
  
@@ -21,6 +22,14 @@ public class HelloJME3 extends SimpleApplication {
     @Override
     public void simpleInitApp() {
     	new ExplosionView(1, 1, Vector3f.ZERO, rootNode, assetManager).play();
+    	
+    	Material mat_brick = new Material(assetManager,
+				"Common/MatDefs/Misc/Unshaded.j3md");
+    	
+    	Node spaceShip = (Node) assetManager
+				.loadModel("assets/Models/reaper.j3o");
+		spaceShip.setMaterial(mat_brick);
+		rootNode.attachChild(spaceShip);
     	
     }
 }

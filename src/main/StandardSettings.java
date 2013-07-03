@@ -38,6 +38,11 @@ public class StandardSettings {
 		groundControls.put("CAMERA_SWITCH", "k" + KeyInput.KEY_C);
 		
 		map.put("GroundControls", groundControls);
+		
+		HashMap<String, String> universalControls = new HashMap<String,String>();
+		universalControls.put("ESCAPE", "k" + KeyInput.KEY_ESCAPE);
+		
+		map.put("UniversalControls", universalControls);
  			
 	}
 	

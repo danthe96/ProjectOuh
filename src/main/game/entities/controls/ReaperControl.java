@@ -26,8 +26,8 @@ public class ReaperControl extends SpacecraftControl{
 	private boolean yawRight = false;
 	private boolean yawLeft = false;
 	private boolean isExploding = false;
-	private float explosionRadius = 10;
-	private float explosionStrength = 5;
+	private float explosionRadius = 20;
+	private float explosionStrength = 50;
 
 
 	@Override
