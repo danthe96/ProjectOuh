@@ -142,7 +142,7 @@ public class Core extends SimpleApplication {
 		bulletAppState.getPhysicsSpace().add(box_rbc);
 
 		Node spaceShip = (Node) assetManager
-				.loadModel("assets/Models/reaper.j3o");
+				.loadModel("assets/Models/reaper2.j3o");
 		spaceShip.setMaterial(mat_brick);
 		rootNode.attachChild(spaceShip);
 
