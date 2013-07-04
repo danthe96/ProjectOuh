@@ -18,12 +18,12 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.shapes.BoxCollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseAxisTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
-import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
@@ -31,8 +31,6 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import com.jme3.util.SkyFactory;
-
-import de.lessvoid.nifty.Nifty;
 
 public class Core extends SimpleApplication {
 	private Settings settings;
@@ -45,8 +43,6 @@ public class Core extends SimpleApplication {
 	private SpacecraftControl spaceControl;
 	private GroundControl groundControl;
 	private boolean camBehindChar = false;
-	private NiftyJmeDisplay niftyDisplay;
-	boolean menu_active;
 
 	/**
 	 * 
@@ -93,13 +89,8 @@ public class Core extends SimpleApplication {
 
 		inputManager.setCursorVisible(false);// hides the cursor
 
-		niftyDisplay = new NiftyJmeDisplay(assetManager, inputManager,
-				audioRenderer, guiViewPort);
-		Nifty nifty = niftyDisplay.getNifty();
-		GameMenuScreen gameMenuScreen = new GameMenuScreen(this);
-		gameMenuScreen.initialize(stateManager, this);
-		nifty.fromXml("layout/game_menu.xml", "menu", gameMenuScreen);
-		
+		// ChaseCamera chaseCam = new ChaseCamera(cam, blue);
+		// Cam = new Camera();
 
 		flyCam.setEnabled(false);
 		bulletAppState.setDebugEnabled(false);
@@ -112,10 +103,7 @@ public class Core extends SimpleApplication {
 		bulletAppState.getPhysicsSpace().update(tpf);
 		bulletAppState.getPhysicsSpace().setGravity(Vector3f.ZERO);
 
-		if (!menu_active)
-			inputManager.setCursorVisible(false);// no cursor
-		else
-			inputManager.setCursorVisible(true);
+		inputManager.setCursorVisible(false);// no cursor
 
 		Vector3f camvec = character.getLocalTranslation();
 		// Quaternion q, p;
@@ -133,20 +121,9 @@ public class Core extends SimpleApplication {
 		cam.setLocation(camvec);
 		cam.setRotation(character.getLocalRotation());
 	}
-	
+
 	public void switchCam() {
 		camBehindChar = !camBehindChar;
-	}
-
-	public void switchMenu() {
-		if (!menu_active) {  // We have the choice, create an extra appstate for each kind of input or clear and reassign the keys every time
-			guiViewPort.addProcessor(niftyDisplay);
-			inputManager.clearMappings();
-		} else{
-			guiViewPort.removeProcessor(niftyDisplay);
-			initKeys(ControlType.SPACECRAFT);
-		}
-		menu_active = !menu_active;
 	}
 
 	private void initSpatials() {
@@ -173,8 +150,8 @@ public class Core extends SimpleApplication {
 		rootNode.attachChild(dummySpaceShip);
 		dummySpaceShip.setLocalTranslation(0, 0, 100);
 
-		spaceControl = new ReaperControl(spaceShip, new BoxCollisionShape(
-				new Vector3f(1, 1, 1)), 6);
+		spaceControl = new ReaperControl(spaceShip,
+				new BoxCollisionShape(new Vector3f(1,1,1)), 6);
 		spaceShip.addControl(spaceControl);
 		bulletAppState.getPhysicsSpace().add(spaceControl);
 		bulletAppState.getPhysicsSpace().enableDebug(assetManager);
@@ -210,9 +187,8 @@ public class Core extends SimpleApplication {
 			inputManager.addListener(groundListener.analogListener,
 					analogKey.toArray(new String[analogKey.size()]));
 		}
-
-		disectSettings(settings.getSettingsMap("UniversalControls"), actionKey,
-				analogKey);
+		
+		disectSettings(settings.getSettingsMap("UniversalControls"), actionKey, analogKey);
 		UniversalListener universalListener = new UniversalListener(this);
 		inputManager.addListener(universalListener.actionListener,
 				actionKey.toArray(new String[actionKey.size()]));
