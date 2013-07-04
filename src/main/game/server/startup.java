@@ -40,12 +40,10 @@ public class startup extends SimpleApplication {
 
 	public static void main(String[] args) {
 		startup app = new startup();
-		app.start(JmeContext.Type.Headless); // headless type for servers!
 	}
 
 	startup() {
-		startup app = new startup();
-		app.start(JmeContext.Type.Headless); // headless type for servers!
+		this.start(JmeContext.Type.Headless); // headless type for servers!
 	}
 
 	// TODO add config type ... maybe a struct
