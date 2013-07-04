@@ -142,7 +142,7 @@ public class Core extends SimpleApplication {
 												// kind of input or clear and reassign the keys every
 												// time
 			guiViewPort.addProcessor(niftyDisplay);
-			inputManager.clearMappings();
+			initKeys(ControlType.STANDARD_ONLY);
 		} else {
 			guiViewPort.removeProcessor(niftyDisplay);
 			initKeys(ControlType.SPACECRAFT);
@@ -177,7 +177,7 @@ public class Core extends SimpleApplication {
 				new Vector3f(1, 1, 1)), 6);
 		spaceShip.addControl(spaceControl);
 		bulletAppState.getPhysicsSpace().add(spaceControl);
-		bulletAppState.getPhysicsSpace().enableDebug(assetManager);
+//		bulletAppState.getPhysicsSpace().enableDebug(assetManager);
 
 		character = spaceShip;
 	}
@@ -254,7 +254,7 @@ public class Core extends SimpleApplication {
 	}
 
 	private enum ControlType {
-		SPACECRAFT, GROUND, MACHINE
+		SPACECRAFT, GROUND, MACHINE, STANDARD_ONLY
 	}
 
 }
