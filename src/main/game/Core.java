@@ -18,6 +18,7 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.shapes.BoxCollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseAxisTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
@@ -165,7 +166,7 @@ public class Core extends SimpleApplication {
 		box.addControl(box_rbc);
 		bulletAppState.getPhysicsSpace().add(box_rbc);
 
-		Node spaceShip = (Node) assetManager.loadModel("assets/Models/reaper2.j3o");
+		Node spaceShip = (Node) assetManager.loadModel("assets/Models/reaper_fertig.j3o");
 		spaceShip.setMaterial(mat_brick);
 		rootNode.attachChild(spaceShip);
 
@@ -173,11 +174,10 @@ public class Core extends SimpleApplication {
 		rootNode.attachChild(dummySpaceShip);
 		dummySpaceShip.setLocalTranslation(0, 0, 100);
 
-		spaceControl = new ReaperControl(spaceShip, new BoxCollisionShape(
-				new Vector3f(1, 1, 1)), 6);
+		spaceControl = new ReaperControl(spaceShip, CollisionShapeFactory.createMeshShape(spaceShip), 6);
 		spaceShip.addControl(spaceControl);
 		bulletAppState.getPhysicsSpace().add(spaceControl);
-//		bulletAppState.getPhysicsSpace().enableDebug(assetManager);
+		bulletAppState.getPhysicsSpace().enableDebug(assetManager);
 
 		character = spaceShip;
 	}
