@@ -11,22 +11,22 @@ import com.jme3.network.serializing.Serializer;
 import com.jme3.system.JmeContext;
 
 public class startup extends SimpleApplication {
-	
+
 	private static final boolean debug_Mode = true;
-	
+
 	// The Client classes
 	private client Clients[];
-	
+
 	private Server myServer;
-	
+
 	// Setting Vars
 	private int clientCount;
 	private int port;
 
-	
-	
+
+
 	private serverlistener listener;
-	
+
 	@Override
 	public void simpleInitApp() {
 		int result;
@@ -39,23 +39,28 @@ public class startup extends SimpleApplication {
 	}
 
 	public static void main(String[] args) {
-	    startup app = new startup();
-	    app.start(JmeContext.Type.Headless); // headless type for servers!
+		startup app = new startup();
+		app.start(JmeContext.Type.Headless); // headless type for servers!
+	}
+
+	startup() {
+		startup app = new startup();
+		app.start(JmeContext.Type.Headless); // headless type for servers!
 	}
 
 	// TODO add config type ... maybe a struct
 	public int initServer(/*serversetting setting*/){
 		System.out.println("starting Server ....");
-		
+
 		// TODO fill the setting Vars!
-		
+
 
 		Serializer.registerClass(message.class);
-		
+
 		//dummy values:
 		clientCount = 42;
 		port = 4242;
-		
+
 		Clients = new client[clientCount];
 		if (debug_Mode) System.out.println("created Client field of " + clientCount + " clients");
 		for (int i=0; i<clientCount; i++){
@@ -73,12 +78,12 @@ public class startup extends SimpleApplication {
 		if (debug_Mode) System.out.println("start Server ...");
 		myServer.start();
 		if (debug_Mode) System.out.println("success!");
-		
+
 		if (debug_Mode) System.out.println("register serverlistener:");
 		listener = new serverlistener(myServer);
 		myServer.addMessageListener(listener, message.class);
-		
-		
+
+
 		//success, return 0
 		return 0;
 	}
