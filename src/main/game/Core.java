@@ -237,4 +237,9 @@ public class Core extends SimpleApplication {
 		SPACECRAFT, GROUND, MACHINE
 	}
 
+	public void switchMenu() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
