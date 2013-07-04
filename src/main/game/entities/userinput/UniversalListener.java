@@ -17,8 +17,8 @@ public class UniversalListener {
 	
 	public ActionListener actionListener = new ActionListener() {
 		public void onAction(String name, boolean keyPressed, float tpf) {
-			if(name.equals("ESCAPE")){
-				app.stop();
+			if(name.equals("ESCAPE") && keyPressed){
+				app.switchMenu();
 			}
 		   
 
