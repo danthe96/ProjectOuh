@@ -13,6 +13,8 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Line;
+import com.jme3.texture.Texture;
+import com.jme3.util.SkyFactory;
  
 // Man kann den Test als gescheitert ansehen :(
 public class SkyTest extends SimpleApplication {
@@ -28,7 +30,7 @@ public class SkyTest extends SimpleApplication {
  
   @Override
   public void simpleInitApp() {
-	 mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+	/* mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
 	    mat.setColor("Color", ColorRGBA.White);
 	 Node sky= new Node("Sky");
 	 Vector3f pos;
@@ -54,9 +56,24 @@ public class SkyTest extends SimpleApplication {
 	 sky.setQueueBucket(Bucket.Sky); 
 	 sky.setCullHint(Spatial.CullHint.Never);
 	    
-	 rootNode.attachChild(sky);
+	 rootNode.attachChild(sky);*/
     
 	
+		  
+		    Texture westTex = assetManager.loadTexture("assets/Picture 0.png");
+		 
+		    final Vector3f normalScale = new Vector3f(-1, 1, 1);
+		    Spatial skySpatial = SkyFactory.createSky(
+		                        assetManager,
+		                        westTex,
+		                        westTex,
+		                        westTex,
+		                        westTex,
+		                        westTex,
+		                        westTex,
+		                        normalScale);
+		    rootNode.attachChild(skySpatial);
+		
 
   }
 }

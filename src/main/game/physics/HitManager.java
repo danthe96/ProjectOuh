@@ -1,5 +1,8 @@
 package main.game.physics;
 
+import main.game.art.EmbellishmentManager;
+import main.game.art.ExplosionView;
+
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.PhysicsTickListener;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
@@ -29,12 +32,18 @@ public class HitManager implements PhysicsCollisionListener, PhysicsTickListener
 	PhysicsGhostObject explodingArea;
 
 	/**
+	 * This connection allows the HitManger to trigger art effects like explosions. And Embi is a cool name anyways :)
+	 */
+	EmbellishmentManager embi;
+
+	/**
 	 * Constructor
 	 * @param physicsSpace
 	 * bulletappstate.getPhysicsSpace()
 	 */
-	public HitManager(PhysicsSpace physicsSpace) {
+	public HitManager(PhysicsSpace physicsSpace, EmbellishmentManager embi) {
 		this.physicsSpace = physicsSpace;
+		this.embi = embi;
 		physicsSpace.addTickListener(this);
 		physicsSpace.addCollisionListener(this);
 	}
@@ -80,6 +89,8 @@ public class HitManager implements PhysicsCollisionListener, PhysicsTickListener
 	 */
 	public void triggerExplosion(Explodable explodable, Spatial s,
 			float explosionRadius, float explosionStrength) {
+		//art, fuck yeah!
+		embi.createExplosionView(s.getLocalTranslation(), explosionStrength, 2f);
 		explodable.setTriggered(true);
 		removeSpatialFromPhysics(s);
 
@@ -145,6 +156,7 @@ public class HitManager implements PhysicsCollisionListener, PhysicsTickListener
 		Vector3f CenterofExplosion = explodingArea.getPhysicsLocation();
 		Vector3f forcevector = new Vector3f();
 		System.out.println("boom!!!");
+		
 		//get all overlapping objects and apply impulse to them
 		for (PhysicsCollisionObject physicsCollisionObject: explodingArea.getOverlappingObjects()) {
 			((PhysicsRigidBody) physicsCollisionObject).getPhysicsLocation(forcevector);
