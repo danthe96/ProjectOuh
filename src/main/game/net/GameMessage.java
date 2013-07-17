@@ -10,8 +10,10 @@ import com.jme3.network.AbstractMessage;
 import com.jme3.network.serializing.Serializable;
 
 /**
- * this is the superclass for all communications
- * so nearly everything is abstract
+ * this is the class for all communications
+ * we will only send "message"s, which
+ * includes the information "info" defined
+ * by the typ
  * @author simon aka clundxiii
  *
  */

@@ -9,6 +9,12 @@ import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
 import com.jme3.network.Server;
 
+/**
+ * this class is used by the server to listen
+ * for incoming messages
+ * @author simon
+ */
+
 public class serverlistener implements MessageListener<HostedConnection> {
 	
 	private Server myServer;
@@ -18,9 +24,9 @@ public class serverlistener implements MessageListener<HostedConnection> {
 	}
 	
 	@Override
-	public void messageReceived(HostedConnection source, Message messageInput) {
-		if (messageInput instanceof message) {
-			message Input = (message) messageInput;
+	public void messageReceived(HostedConnection source, GameMessage messageInput) {
+		if (messageInput instanceof GameMessage) {
+			GameMessage Input = (GameMessage) messageInput;
 			System.out.println("Client #" + source.getId() + ":");
 		    if (Input.getMessagetype() == messagetype.movement){
 		    	movement newPos = (movement) Input.getInformation();

@@ -18,14 +18,14 @@ import com.jme3.network.serializing.Serializer;
 public class netlistener implements MessageListener<Client> {
 	
 	public netlistener() {
-		Serializer.registerClass(message.class);
+		Serializer.registerClass(GameMessage.class);
 		System.out.println("netlistener gestartet!");
 	}
 	
 	@Override
-	public void messageReceived(Client source, Message messageInput) {
-	    if (messageInput instanceof message) {
-			message Input = (message) messageInput;
+	public void messageReceived(Client source, GameMessage messageInput) {
+	    if (messageInput instanceof GameMessage) {
+			GameMessage Input = (GameMessage) messageInput;
 			System.out.println("Client #" + source.getId() + ":");
 	    	if (Input.getMessagetype() == messagetype.movement){
 	    		movement newPos = (movement) Input.getInformation();

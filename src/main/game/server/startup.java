@@ -10,6 +10,13 @@ import com.jme3.network.Server;
 import com.jme3.network.serializing.Serializer;
 import com.jme3.system.JmeContext;
 
+/**
+ * this class will start the server
+ * as you can see, you simple have to
+ * run the constructor, thats it!
+ * @author simon
+ */
+
 public class startup extends SimpleApplication {
 
 	private static final boolean debug_Mode = true;
@@ -53,7 +60,7 @@ public class startup extends SimpleApplication {
 		// TODO fill the setting Vars!
 
 
-		Serializer.registerClass(message.class);
+		Serializer.registerClass(GameMessage.class);
 
 		//dummy values:
 		clientCount = 42;
@@ -79,7 +86,7 @@ public class startup extends SimpleApplication {
 
 		if (debug_Mode) System.out.println("register serverlistener:");
 		listener = new serverlistener(myServer);
-		myServer.addMessageListener(listener, message.class);
+		myServer.addMessageListener(listener, GameMessage.class);
 
 
 		//success, return 0

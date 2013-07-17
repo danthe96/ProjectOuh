@@ -3,6 +3,13 @@ package main.game.net.utils;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 
+/**
+ * this class is used in gamemessage to send
+ * a movement/new position and speed to server
+ * and client
+ * @author simon
+ */
+
 public class movement extends information{
 	
 	private Vector3f position;

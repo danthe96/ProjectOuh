@@ -1,5 +1,7 @@
 /**
  * see main.game.net.server for other point of connection
+ * this class is used by the server to store
+ * information about and to control the client
  * @author simon
  */
 
