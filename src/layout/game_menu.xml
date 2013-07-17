@@ -6,12 +6,17 @@
 	<useControls filename="nifty-default-controls.xml" />
 	<screen id="menu" controller="main.game.GameMenuScreen">
 		<layer id="layer_main" backgroundColor="#0000" childLayout="center">
-			<panel id="panel_main" padding="10px,5px" valign="center" align="center"
-				backgroundColor="#111f" childLayout="vertical">
-				<text text="Main Menu" color="#ffff" font="Interface/Fonts/Default.fnt" valign="top" align="center" padding="0px,0px,10px,0px"/>
+			<panel id="panel_main" padding="10px,5px" valign="center"
+				align="center" backgroundColor="#111f" childLayout="vertical">
+				<text text="Main Menu" color="#ffff" font="Interface/Fonts/Default.fnt"
+					valign="top" align="center" padding="0px,0px,10px,0px" />
 				<control name="button" label="Continue" id="ContinueButton"
 					visibleToMouse="true" align="center">
 					<interact onClick="continueGame()" />
+				</control>
+				<control name="button" label="Restart" id="RestartButton"
+					visibleToMouse="true" align="center">
+					<interact onClick="restartGame()" />
 				</control>
 				<control name="button" label="Exit" id="ExitButton"
 					visibleToMouse="true" align="center">

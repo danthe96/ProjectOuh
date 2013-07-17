@@ -47,18 +47,14 @@ public class Core extends SimpleApplication {
 	private GroundControl groundControl;
 	private boolean camBehindChar = false;
 	private NiftyJmeDisplay niftyDisplay;
-	boolean menu_active;
+	boolean menu_active = false;
+	
 
 	/**
 	 * 
 	 * @author danielwenzel, danielthevessen, fabiankessler, simonmichalke
 	 */
 	private EmbellishmentManager embi;
-
-	public static void main(String[] args) {
-		Core coreapp = new Core();
-		coreapp.start();
-	}
 
 	@Override
 	public void simpleInitApp() {
@@ -173,10 +169,16 @@ public class Core extends SimpleApplication {
 		Node dummySpaceShip = spaceShip.clone(true);
 		rootNode.attachChild(dummySpaceShip);
 		dummySpaceShip.setLocalTranslation(0, 0, 100);
+		
+		/*RigidBodyControl dummy_rbd = new RigidBodyControl(CollisionShapeFactory.createMeshShape(dummySpaceShip), 6f);
+		dummySpaceShip.addControl(dummy_rbd);
+		bulletAppState.getPhysicsSpace().add(dummy_rbd);*/
+		// not working, collision seems to be detected, but ignored (kinda)
 
-		spaceControl = new ReaperControl(spaceShip, CollisionShapeFactory.createMeshShape(spaceShip), 6);
+		spaceControl = new ReaperControl(spaceShip, CollisionShapeFactory.createMeshShape(spaceShip), 6f);
 		spaceShip.addControl(spaceControl);
 		bulletAppState.getPhysicsSpace().add(spaceControl);
+		
 		bulletAppState.getPhysicsSpace().enableDebug(assetManager);
 
 		character = spaceShip;
