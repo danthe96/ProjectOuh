@@ -1,5 +1,7 @@
 package main.game;
 
+import main.Startup;
+
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
@@ -54,6 +56,11 @@ public class GameMenuScreen extends AbstractAppState implements
 	 
 	 public void continueGame(){
 		 core.switchMenu();
+	 }
+	 
+	 public void restartGame(){
+		 Startup launcher = new Startup();
+		 app.stop();
 	 }
 	 
 
