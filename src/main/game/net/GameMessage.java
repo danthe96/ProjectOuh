@@ -21,41 +21,28 @@ import com.jme3.network.serializing.Serializable;
 @Serializable
 public class GameMessage extends AbstractMessage {
 	
-	protected MessageType typ;
-	
 	private Information info;
 	
 	//typets := [type]-[t]o-[s]et
 	//basic constructor; should be invoked by children class
 	
 	public GameMessage() {
-		typ = null;
 		setInformation(null);
 		return;
 	}
 	
-	public GameMessage(MessageType typts, Information infots) {
-		typ = typts;
+	public GameMessage(Information infots) {
 		info = infots;
 	}
 	
 	public GameMessage(Vector3f positionts,	Quaternion rotationts, float speedts) {
-		typ = MessageType.movement;
 		info = new Movement(positionts, rotationts, speedts);
-	}
-	
-	public void setMessageType(MessageType typts) {
-		typ = typts;
 	}
 	
 	public void setInformation(Information infots) {
 		info = infots;
 	}
 
-	public MessageType getMessagetype(){
-		return typ;
-	}
-	
 	public Information getInformation() {
 		return info;
 	}

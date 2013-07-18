@@ -27,20 +27,23 @@ public class NetListener implements MessageListener<Client> {
 	    if (messageInput instanceof GameMessage) {
 			GameMessage Input = (GameMessage) messageInput;
 			System.out.println("Client #" + source.getId() + ":");
-	    	if (Input.getMessagetype() == MessageType.movement){
+	    	if (Input.getInformation() instanceof Movement){
 	    		Movement newPos = (Movement) Input.getInformation();
 	    		System.out.println("Position: " + newPos.getPosition());
 	    		System.out.println("Rotation: " + newPos.getRotation());
 	    		System.out.println("Speed:    " + newPos.getSpeed());
 	    		
 	    	}
-	    	else if (Input.getMessagetype() == MessageType.ping){
+	    	else if (Input.getInformation() instanceof Ping){
 	    		
 	    	}
-	    	else if (Input.getMessagetype() == MessageType.spawn){
+	    	else if (Input.getInformation() instanceof ObjectArray){
 	    		
 	    	}
-	    	else if (Input.getMessagetype() == MessageType.game){
+	    	else if (Input.getInformation() instanceof SpawnEvent){
+	    		
+	    	}
+	    	else if (Input.getInformation() instanceof GameInformation){
 	    		
 	    	}
 	    	else
