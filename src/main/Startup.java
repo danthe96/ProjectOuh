@@ -8,13 +8,18 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import com.jme3.system.JmeContext;
+
 import testingarea.HelloPhysics;
 
 import main.game.Core;
+import main.game.server.ServerStartup;
 
 public class Startup extends JPanel {
 
 	public Startup() {
+		
+		final ServerStartup app = new ServerStartup(true);
 
 		final JFrame f = new JFrame("Launcher");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -54,6 +59,36 @@ public class Startup extends JPanel {
 			}
 		});
 		launcher.add(launch_physics);
+
+		JButton launch_server = new JButton("Launch server");
+		launch_server.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						app.start(JmeContext.Type.Headless);
+						//f.dispose();
+					}
+				}).start();
+			}
+		});
+		launcher.add(launch_server);
+
+		JButton quit_server = new JButton("Quit server");
+		quit_server.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						app.stop();
+						//f.dispose();
+					}
+				}).start();
+			}
+		});
+		launcher.add(quit_server);
 
 		JButton exit = new JButton("Exit");
 		exit.addActionListener(new ActionListener() {

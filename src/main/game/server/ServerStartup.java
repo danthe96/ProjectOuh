@@ -17,7 +17,7 @@ import com.jme3.system.JmeContext;
  * @author simon
  */
 
-public class Startup extends SimpleApplication {
+public class ServerStartup extends SimpleApplication {
 
 	private static final boolean debug_Mode = true;
 
@@ -46,11 +46,16 @@ public class Startup extends SimpleApplication {
 	}
 
 	public static void main(String[] args) {
-		Startup app = new Startup();
+		ServerStartup app = new ServerStartup();
 	}
 
-	Startup() {
+	public ServerStartup() {
 		this.start(JmeContext.Type.Headless); // headless type for servers!
+	}
+
+	public ServerStartup(boolean b) {
+		// just a 2nd constructor done with overloading
+		// used in Startup.java
 	}
 
 	// TODO add config type ... maybe a struct
