@@ -98,6 +98,7 @@ public class Core extends SimpleApplication {
 		nifty.fromXml("layout/game_menu.xml", "menu", gameMenuScreen);
 
 		flyCam.setEnabled(false);
+		cam.setFrustumFar(100000);
 		bulletAppState.setDebugEnabled(false);
 
 		initKeys(ControlType.SPACECRAFT);
@@ -174,6 +175,16 @@ public class Core extends SimpleApplication {
 		dummySpaceShip.addControl(dummy_rbd);
 		bulletAppState.getPhysicsSpace().add(dummy_rbd);*/
 		// not working, collision seems to be detected, but ignored (kinda)
+		
+		Node carrierNode = (Node) assetManager.loadModel("assets/Models/carrier.j3o");
+		carrierNode.setMaterial(mat_brick);
+		rootNode.attachChild(carrierNode);
+		carrierNode.setLocalTranslation(0, 0, 10000);
+		
+		RigidBodyControl carriercontrol = new ReaperControl(carrierNode, CollisionShapeFactory.createMeshShape(carrierNode), 0)
+		;
+		carrierNode.addControl(carriercontrol);
+		bulletAppState.getPhysicsSpace().add(carriercontrol);
 
 		spaceControl = new ReaperControl(spaceShip, CollisionShapeFactory.createMeshShape(spaceShip), 6f);
 		spaceShip.addControl(spaceControl);
