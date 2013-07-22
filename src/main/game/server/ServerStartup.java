@@ -57,7 +57,17 @@ public class ServerStartup extends SimpleApplication {
 		// just a 2nd constructor done with overloading
 		// used in Startup.java
 	}
-
+	
+	public void stop(){
+		exit();
+	}
+	
+	public void exit(){
+		//cleanup();
+		System.out.println("quitting Server ...");
+		destroy();
+	}
+	
 	// TODO add config type ... maybe a struct
 	public int initServer(/*serversetting setting*/){
 		System.out.println("starting Server ....");
