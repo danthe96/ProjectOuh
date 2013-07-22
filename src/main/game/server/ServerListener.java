@@ -1,8 +1,7 @@
 package main.game.server;
 
 import main.game.net.GameMessage;
-import main.game.net.utils.MessageType;
-import main.game.net.utils.Movement;
+import main.game.net.utils.*;
 
 import com.jme3.network.HostedConnection;
 import com.jme3.network.Message;

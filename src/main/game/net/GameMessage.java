@@ -1,7 +1,6 @@
 package main.game.net;
 
 import main.game.net.utils.Information;
-import main.game.net.utils.MessageType;
 import main.game.net.utils.Movement;
 
 import com.jme3.math.Quaternion;

@@ -7,7 +7,8 @@
 
 package main.game.server;
 
-import main.game.net.utils.MessageType;
+import main.game.net.GameMessage;
+
 
 public class Client {
 	
@@ -42,7 +43,7 @@ public class Client {
 	}
 	
 	//send a message to the client
-	public int sendData(MessageType message) {
+	public int sendData(GameMessage message) {
 		
 		return 0; //everything ok!
 	}
