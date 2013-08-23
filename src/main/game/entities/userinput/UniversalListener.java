@@ -19,7 +19,7 @@ public class UniversalListener {
 		public void onAction(String name, boolean keyPressed, float tpf) {
 			if(name.equals("ESCAPE") && keyPressed){
 				app.switchMenu();
-			}else if(name.equals("DEBUG")){
+			}else if(name.equals("DEBUG") && keyPressed){
 				app.getBulletAppState().setDebugEnabled(!app.getBulletAppState().isDebugEnabled());
 			}
 		   
