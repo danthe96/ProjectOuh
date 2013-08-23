@@ -38,6 +38,14 @@ import de.lessvoid.nifty.Nifty;
 public class Core extends SimpleApplication {
 	private Settings settings;
 	private BulletAppState bulletAppState;
+	public BulletAppState getBulletAppState() {
+		return bulletAppState;
+	}
+
+	public void setBulletAppState(BulletAppState bulletAppState) {
+		this.bulletAppState = bulletAppState;
+	}
+
 	private HitManager hitManager;
 
 	// this is the body/machine, where you are inside, which you are playing
@@ -48,7 +56,6 @@ public class Core extends SimpleApplication {
 	private boolean camBehindChar = false;
 	private NiftyJmeDisplay niftyDisplay;
 	boolean menu_active = false;
-	
 
 	/**
 	 * 
@@ -82,8 +89,8 @@ public class Core extends SimpleApplication {
 				.loadTexture("assets/Textures/AlternativeSkybox/TestSky_top3.png");
 
 		final Vector3f normalScale = new Vector3f(-1, 1, 1);
-		Spatial skySpatial = SkyFactory.createSky(assetManager, westTex, eastTex,
-				northTex, southTex, upTex, downTex, normalScale);
+		Spatial skySpatial = SkyFactory.createSky(assetManager, westTex,
+				eastTex, northTex, southTex, upTex, downTex, normalScale);
 		rootNode.attachChild(skySpatial);
 
 		initSpatials();
@@ -119,8 +126,8 @@ public class Core extends SimpleApplication {
 
 		if (camBehindChar) {
 
-			character.localToWorld(new Vector3f(0, 0, -CAM_DISTANCE_BEHIND_CHAR),
-					camvec);
+			character.localToWorld(
+					new Vector3f(0, 0, -CAM_DISTANCE_BEHIND_CHAR), camvec);
 			// p = new Quaternion(0, 0, 1, +CAM_DISTANCE_BEHIND_CHAR); //-cam*
 			// or +cam* please test
 			// p.mult(character.getLocalRotation());
@@ -136,9 +143,11 @@ public class Core extends SimpleApplication {
 	}
 
 	public void switchMenu() {
-		if (!menu_active) { // We have the choice, create an extra appstate for each
-												// kind of input or clear and reassign the keys every
-												// time
+		if (!menu_active) { // We have the choice, create an extra appstate for
+							// each
+							// kind of input or clear and reassign the keys
+							// every
+							// time
 			guiViewPort.addProcessor(niftyDisplay);
 			initKeys(ControlType.STANDARD_ONLY);
 		} else {
@@ -151,11 +160,11 @@ public class Core extends SimpleApplication {
 	private void initSpatials() {
 		Material mat_brick = new Material(assetManager,
 				"Common/MatDefs/Misc/Unshaded.j3md");
-		mat_brick.setTexture("ColorMap",
-				assetManager.loadTexture("Textures/Terrain/BrickWall/BrickWall.jpg"));
+		mat_brick.setTexture("ColorMap", assetManager
+				.loadTexture("Textures/Terrain/BrickWall/BrickWall.jpg"));
 
-		Spatial box = new Geometry("Box", new Box(
-				new Vector3f(-2.5f, -2.5f, -2.5f), new Vector3f(2.5f, 2.5f, 2.5f)));
+		Spatial box = new Geometry("Box", new Box(new Vector3f(-2.5f, -2.5f,
+				-2.5f), new Vector3f(2.5f, 2.5f, 2.5f)));
 		box.setMaterial(mat_brick);
 		rootNode.attachChild(box);
 		box.setLocalTranslation(25f, -10f, 75f);
@@ -163,34 +172,41 @@ public class Core extends SimpleApplication {
 		box.addControl(box_rbc);
 		bulletAppState.getPhysicsSpace().add(box_rbc);
 
-		Node spaceShip = (Node) assetManager.loadModel("assets/Models/reaper_fertig.j3o");
+		Node spaceShip = (Node) assetManager
+				.loadModel("assets/Models/reaper_fertig.j3o");
 		spaceShip.setMaterial(mat_brick);
 		rootNode.attachChild(spaceShip);
 
 		Node dummySpaceShip = spaceShip.clone(true);
 		rootNode.attachChild(dummySpaceShip);
 		dummySpaceShip.setLocalTranslation(0, 0, 100);
-		
-		/*RigidBodyControl dummy_rbd = new RigidBodyControl(CollisionShapeFactory.createMeshShape(dummySpaceShip), 6f);
-		dummySpaceShip.addControl(dummy_rbd);
-		bulletAppState.getPhysicsSpace().add(dummy_rbd);*/
+
+		/*
+		 * RigidBodyControl dummy_rbd = new
+		 * RigidBodyControl(CollisionShapeFactory
+		 * .createMeshShape(dummySpaceShip), 6f);
+		 * dummySpaceShip.addControl(dummy_rbd);
+		 * bulletAppState.getPhysicsSpace().add(dummy_rbd);
+		 */
 		// not working, collision seems to be detected, but ignored (kinda)
-		
-		Node carrierNode = (Node) assetManager.loadModel("assets/Models/carrier.j3o");
+
+		Node carrierNode = (Node) assetManager
+				.loadModel("assets/Models/carrier.j3o");
 		carrierNode.setMaterial(mat_brick);
 		rootNode.attachChild(carrierNode);
 		carrierNode.setLocalTranslation(0, 0, 10000);
-		
-		RigidBodyControl carriercontrol = new ReaperControl(carrierNode, CollisionShapeFactory.createMeshShape(carrierNode), 0)
-		;
+
+		RigidBodyControl carriercontrol = new ReaperControl(carrierNode,
+				CollisionShapeFactory.createMeshShape(carrierNode), 0);
 		carrierNode.addControl(carriercontrol);
 		bulletAppState.getPhysicsSpace().add(carriercontrol);
 
-		spaceControl = new ReaperControl(spaceShip, CollisionShapeFactory.createMeshShape(spaceShip), 6f);
+		spaceControl = new ReaperControl(spaceShip,
+				CollisionShapeFactory.createMeshShape(spaceShip), 6f);
 		spaceShip.addControl(spaceControl);
 		bulletAppState.getPhysicsSpace().add(spaceControl);
-		
-		bulletAppState.getPhysicsSpace().enableDebug(assetManager);
+
+		// bulletAppState.getPhysicsSpace().enableDebug(assetManager);
 
 		character = spaceShip;
 	}
@@ -202,21 +218,22 @@ public class Core extends SimpleApplication {
 		List<String> analogKey = new ArrayList<String>();
 
 		if (controlType == ControlType.SPACECRAFT)
-			disectSettings(settings.getSettingsMap("SpacecraftControls"), actionKey,
-					analogKey);
+			disectSettings(settings.getSettingsMap("SpacecraftControls"),
+					actionKey, analogKey);
 		else if (controlType == ControlType.GROUND)
-			disectSettings(settings.getSettingsMap("GroundControls"), actionKey,
-					analogKey);
+			disectSettings(settings.getSettingsMap("GroundControls"),
+					actionKey, analogKey);
 
 		if (controlType == ControlType.SPACECRAFT) {
-			SpacecraftListener spacecraftListener = new SpacecraftListener(this,
-					spaceControl);
+			SpacecraftListener spacecraftListener = new SpacecraftListener(
+					this, spaceControl);
 			inputManager.addListener(spacecraftListener.actionListener,
 					actionKey.toArray(new String[actionKey.size()]));
 			inputManager.addListener(spacecraftListener.analogListener,
 					analogKey.toArray(new String[analogKey.size()]));
 		} else if (controlType == ControlType.GROUND) {
-			GroundListener groundListener = new GroundListener(this, groundControl);
+			GroundListener groundListener = new GroundListener(this,
+					groundControl);
 			inputManager.addListener(groundListener.actionListener,
 					actionKey.toArray(new String[actionKey.size()]));
 			inputManager.addListener(groundListener.analogListener,
@@ -244,18 +261,21 @@ public class Core extends SimpleApplication {
 				actionKey.add(key);
 			} else if (binding.charAt(0) == 'a') {
 				if (binding.charAt(1) == 't')
-					inputManager
-							.addMapping(key,
-									new MouseAxisTrigger(Integer.parseInt(binding.substring(2)),
-											true));
+					inputManager.addMapping(
+							key,
+							new MouseAxisTrigger(Integer.parseInt(binding
+									.substring(2)), true));
 				if (binding.charAt(1) == 'f')
-					inputManager.addMapping(key,
-							new MouseAxisTrigger(Integer.parseInt(binding.substring(2)),
-									false));
+					inputManager.addMapping(
+							key,
+							new MouseAxisTrigger(Integer.parseInt(binding
+									.substring(2)), false));
 				analogKey.add(key);
 			} else if (binding.charAt(0) == 'm') {
-				inputManager.addMapping(key,
-						new MouseButtonTrigger(Integer.parseInt(binding.substring(1))));
+				inputManager.addMapping(
+						key,
+						new MouseButtonTrigger(Integer.parseInt(binding
+								.substring(1))));
 				actionKey.add(key);
 			}
 		}

@@ -99,11 +99,11 @@ public class ReaperControl extends SpacecraftControl{
 	@Override
 	public void update(float tpf){  // tpf = 1/fps  in seconds
 
-		if (accelerating && (currentspeed <= 30)) {
+		if (accelerating && (currentspeed <= 100)) {
 			currentspeed += acceleration * tpf; // 5 m/s²
 			//			System.out.println("accelerating " + currentspeed);
 		} else {
-			if (decelerating && (currentspeed >= -30)) {
+			if (decelerating && (currentspeed >= -100)) {
 				currentspeed -= acceleration * tpf; // 5 m/s²
 				//				System.out.println("decelerating " + currentspeed);
 			} else {
