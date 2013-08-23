@@ -67,6 +67,7 @@ public class Core extends SimpleApplication {
 	public void simpleInitApp() {
 		bulletAppState = new BulletAppState();
 		stateManager.attach(bulletAppState);
+		bulletAppState.getPhysicsSpace().setGravity(Vector3f.ZERO);
 
 		embi = new EmbellishmentManager(rootNode, assetManager, renderManager,
 				viewPort);
@@ -93,7 +94,6 @@ public class Core extends SimpleApplication {
 				eastTex, northTex, southTex, upTex, downTex, normalScale);
 		rootNode.attachChild(skySpatial);
 
-		initSpatials();
 
 		inputManager.setCursorVisible(false);// hides the cursor
 
@@ -106,16 +106,14 @@ public class Core extends SimpleApplication {
 
 		flyCam.setEnabled(false);
 		cam.setFrustumFar(100000);
-		bulletAppState.setDebugEnabled(false);
-
+		
+		initSpatials();
 		initKeys(ControlType.SPACECRAFT);
+		
 	}
 
 	@Override
 	public void simpleUpdate(float tpf) {
-		bulletAppState.getPhysicsSpace().update(tpf);
-		bulletAppState.getPhysicsSpace().setGravity(Vector3f.ZERO);
-
 		if (!menu_active)
 			inputManager.setCursorVisible(false);// no cursor
 		else
@@ -197,7 +195,8 @@ public class Core extends SimpleApplication {
 		carrierNode.setLocalTranslation(0, 0, 10000);
 
 		RigidBodyControl carriercontrol = new ReaperControl(carrierNode,
-				CollisionShapeFactory.createMeshShape(carrierNode), 0);
+				CollisionShapeFactory.createMeshShape(carrierNode), 10000);
+
 		carrierNode.addControl(carriercontrol);
 		bulletAppState.getPhysicsSpace().add(carriercontrol);
 
@@ -205,8 +204,6 @@ public class Core extends SimpleApplication {
 				CollisionShapeFactory.createMeshShape(spaceShip), 6f);
 		spaceShip.addControl(spaceControl);
 		bulletAppState.getPhysicsSpace().add(spaceControl);
-
-		// bulletAppState.getPhysicsSpace().enableDebug(assetManager);
 
 		character = spaceShip;
 	}
