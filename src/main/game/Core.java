@@ -14,6 +14,7 @@ import main.game.entities.userinput.SpacecraftListener;
 import main.game.entities.userinput.UniversalListener;
 import main.game.physics.HitManager;
 
+import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.shapes.BoxCollisionShape;
@@ -106,10 +107,10 @@ public class Core extends SimpleApplication {
 
 		flyCam.setEnabled(false);
 		cam.setFrustumFar(100000);
-		
+
 		initSpatials();
 		initKeys(ControlType.SPACECRAFT);
-		
+
 	}
 
 	@Override
@@ -142,10 +143,10 @@ public class Core extends SimpleApplication {
 
 	public void switchMenu() {
 		if (!menu_active) { // We have the choice, create an extra appstate for
-							// each
-							// kind of input or clear and reassign the keys
-							// every
-							// time
+			// each
+			// kind of input or clear and reassign the keys
+			// every
+			// time
 			guiViewPort.addProcessor(niftyDisplay);
 			initKeys(ControlType.STANDARD_ONLY);
 		} else {
@@ -160,52 +161,59 @@ public class Core extends SimpleApplication {
 				"Common/MatDefs/Misc/Unshaded.j3md");
 		mat_brick.setTexture("ColorMap", assetManager
 				.loadTexture("Textures/Terrain/BrickWall/BrickWall.jpg"));
+		//Static:
+		
+		{//Carrier
+			Node carrierNode = (Node) assetManager
+					.loadModel("assets/Models/carrier.j3o");
+			carrierNode.setMaterial(mat_brick);
+			rootNode.attachChild(carrierNode);
+			carrierNode.setLocalTranslation(0, 0, 2500);
+			RigidBodyControl carrierControl = new RigidBodyControl(CollisionShapeFactory.createMeshShape(carrierNode),0f);
+			carrierNode.addControl(carrierControl);
+			bulletAppState.getPhysicsSpace().add(carrierControl);
+		}//\Carrier		
+		
+		//\Static
+		//Not-static:
 
-		Spatial box = new Geometry("Box", new Box(new Vector3f(-2.5f, -2.5f,
-				-2.5f), new Vector3f(2.5f, 2.5f, 2.5f)));
-		box.setMaterial(mat_brick);
-		rootNode.attachChild(box);
-		box.setLocalTranslation(25f, -10f, 75f);
-		RigidBodyControl box_rbc = new RigidBodyControl(8f);
-		box.addControl(box_rbc);
-		bulletAppState.getPhysicsSpace().add(box_rbc);
+		{//Physics test Box
+			Spatial box = new Geometry("Box", new Box(new Vector3f(-2.5f, -2.5f,
+					-2.5f), new Vector3f(2.5f, 2.5f, 2.5f)));
+			box.setMaterial(mat_brick);
+			rootNode.attachChild(box);
+			box.setLocalTranslation(25f, -10f, 75f);
+			RigidBodyControl box_rbc = new RigidBodyControl(8f);
+			box.addControl(box_rbc);
+			bulletAppState.getPhysicsSpace().add(box_rbc);
+		}//\Physics test Box
 
-		Node spaceShip = (Node) assetManager
-				.loadModel("assets/Models/reaper_fertig.j3o");
-		spaceShip.setMaterial(mat_brick);
-		rootNode.attachChild(spaceShip);
+		{//Spaceships
+			Node standartReaper = (Node) assetManager
+					.loadModel("assets/Models/reaper_fertig.j3o");
+			CollisionShape collisionShape=CollisionShapeFactory.createDynamicMeshShape(standartReaper);
+			standartReaper.setMaterial(mat_brick);
+			{
+				Node spaceShip= standartReaper.clone(true);
+				rootNode.attachChild(spaceShip);
+				spaceControl = new ReaperControl(spaceShip, collisionShape, 6f);
+				spaceShip.addControl(spaceControl);
+				bulletAppState.getPhysicsSpace().add(spaceControl);
 
-		Node dummySpaceShip = spaceShip.clone(true);
-		rootNode.attachChild(dummySpaceShip);
-		dummySpaceShip.setLocalTranslation(0, 0, 100);
+				character = spaceShip;
+			}
 
-		/*
-		 * RigidBodyControl dummy_rbd = new
-		 * RigidBodyControl(CollisionShapeFactory
-		 * .createMeshShape(dummySpaceShip), 6f);
-		 * dummySpaceShip.addControl(dummy_rbd);
-		 * bulletAppState.getPhysicsSpace().add(dummy_rbd);
-		 */
-		// not working, collision seems to be detected, but ignored (kinda)
+			{//dummy Space ship
+				Node spaceShip = standartReaper.clone(true);
+				rootNode.attachChild(spaceShip);
+				spaceShip.setLocalTranslation(0, 0, 100);
+				ReaperControl control=new ReaperControl(spaceShip, collisionShape, 6f);
+				spaceShip.addControl(control);
+				bulletAppState.getPhysicsSpace().add(control);
+				
+			}//\dummy Space ship
+		}
 
-		Node carrierNode = (Node) assetManager
-				.loadModel("assets/Models/carrier.j3o");
-		carrierNode.setMaterial(mat_brick);
-		rootNode.attachChild(carrierNode);
-		carrierNode.setLocalTranslation(0, 0, 10000);
-
-		RigidBodyControl carriercontrol = new ReaperControl(carrierNode,
-				CollisionShapeFactory.createMeshShape(carrierNode), 10000);
-
-		carrierNode.addControl(carriercontrol);
-		bulletAppState.getPhysicsSpace().add(carriercontrol);
-
-		spaceControl = new ReaperControl(spaceShip,
-				CollisionShapeFactory.createMeshShape(spaceShip), 6f);
-		spaceShip.addControl(spaceControl);
-		bulletAppState.getPhysicsSpace().add(spaceControl);
-
-		character = spaceShip;
 	}
 
 	private void initKeys(ControlType controlType) {

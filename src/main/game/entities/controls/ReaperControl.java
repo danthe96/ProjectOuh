@@ -8,6 +8,7 @@ public class ReaperControl extends SpacecraftControl{
 
 	public ReaperControl(Spatial spatial, CollisionShape shape, float mass) {
 		super(spatial, shape, mass);
+		setKinematic(false);
 		// TODO Auto-generated constructor stub
 	}
 	public ReaperControl(Spatial spatial, float mass) {
@@ -19,7 +20,8 @@ public class ReaperControl extends SpacecraftControl{
 	private static final float SENSITIVITY_X = 1.2f; // aka "pitch"
 	private static final float SENSITIVITY_Z = 1.2f; // aka "roll"
 	private static final float SENSITIVITY_Y = .5f; // aka "yaw"; very low, we want to increase difficulty ;-)
-	private float acceleration = 5;
+	private static final float MAXIMUM_SPEED = 400;
+	private float acceleration = 100;
 	private float currentspeed = 0;
 	private boolean accelerating = false;
 	private boolean decelerating = false;
@@ -99,13 +101,11 @@ public class ReaperControl extends SpacecraftControl{
 	@Override
 	public void update(float tpf){  // tpf = 1/fps  in seconds
 
-		if (accelerating && (currentspeed <= 100)) {
+		if (accelerating && (currentspeed <= MAXIMUM_SPEED)) {
 			currentspeed += acceleration * tpf; // 5 m/s²
-			//			System.out.println("accelerating " + currentspeed);
 		} else {
-			if (decelerating && (currentspeed >= -100)) {
+			if (decelerating && (currentspeed >= -MAXIMUM_SPEED)) {
 				currentspeed -= acceleration * tpf; // 5 m/s²
-				//				System.out.println("decelerating " + currentspeed);
 			} else {
 				if (currentspeed > 0)
 					currentspeed -= 1.5 * tpf;
