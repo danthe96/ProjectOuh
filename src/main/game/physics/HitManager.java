@@ -53,8 +53,8 @@ public class HitManager implements PhysicsCollisionListener, PhysicsTickListener
 	 */
 	@Override
 	public void collision(PhysicsCollisionEvent arg0) {
-//		System.out.println(arg0.getNodeA() + "" + arg0.getPositionWorldOnA() + "   " + arg0.getNodeB() + "" + arg0.getPositionWorldOnB());
-		if (!arg0.getNodeA().equals(arg0.getNodeB())) 
+		System.out.println(arg0.getNodeA() + "" + arg0.getPositionWorldOnA() + "   " + arg0.getNodeB() + "" + arg0.getPositionWorldOnB());
+		if (arg0.getNodeA()!=null&&!arg0.getNodeA().equals(arg0.getNodeB())) 
 			checkForExplosion(arg0);
 	}
 
@@ -156,16 +156,27 @@ public class HitManager implements PhysicsCollisionListener, PhysicsTickListener
 		Vector3f CenterofExplosion = explodingArea.getPhysicsLocation();
 		Vector3f forcevector = new Vector3f();
 		System.out.println("boom!!!");
-		
+
 		//get all overlapping objects and apply impulse to them
 		for (PhysicsCollisionObject physicsCollisionObject: explodingArea.getOverlappingObjects()) {
-			((PhysicsRigidBody) physicsCollisionObject).getPhysicsLocation(forcevector);
+
+			if(physicsCollisionObject instanceof PhysicsRigidBody) {
+				((PhysicsRigidBody) physicsCollisionObject).getPhysicsLocation(forcevector);
+				System.out.println("rigid");
+			}
+			else
+				((PhysicsGhostObject) physicsCollisionObject).getPhysicsLocation(forcevector);
 			forcevector.subtractLocal(CenterofExplosion);
 			float force = explosionStrength*(explosionRadius - forcevector.length());
 			forcevector.normalizeLocal();
 			forcevector.multLocal(force);
-			((PhysicsRigidBody) physicsCollisionObject).applyImpulse(forcevector, Vector3f.ZERO);
-
+			if(physicsCollisionObject instanceof PhysicsRigidBody)
+				((PhysicsRigidBody) physicsCollisionObject).applyImpulse(forcevector, Vector3f.ZERO);
+			else
+				
+//				((PhysicsGhostObject) physicsCollisionObject).applyImpulse(forcevector, Vector3f.ZERO);
+				;
+				
 		}
 		physicsSpace.remove(explodingArea);
 		explodingArea = null;
