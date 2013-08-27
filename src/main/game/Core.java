@@ -17,12 +17,12 @@ import main.game.physics.HitManager;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
-import com.jme3.bullet.collision.shapes.BoxCollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseAxisTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
+import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
 import com.jme3.niftygui.NiftyJmeDisplay;
@@ -30,25 +30,29 @@ import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.scene.control.CameraControl;
+import com.jme3.scene.control.CameraControl.ControlDirection;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import com.jme3.util.SkyFactory;
 
 import de.lessvoid.nifty.Nifty;
 
+/**
+ * 
+ * @author danielwenzel, danielthevessen, fabiankessler, simonmichalke
+ */
+
 public class Core extends SimpleApplication {
-	private Settings settings;
-	private BulletAppState bulletAppState;
-	public BulletAppState getBulletAppState() {
-		return bulletAppState;
+	private enum ControlType {
+		SPACECRAFT, GROUND, MACHINE, STANDARD_ONLY
 	}
 
-	public void setBulletAppState(BulletAppState bulletAppState) {
-		this.bulletAppState = bulletAppState;
-	}
+	private Settings settings;
+
+	private BulletAppState bulletAppState;
 
 	private HitManager hitManager;
-
 	// this is the body/machine, where you are inside, which you are playing
 	private Spatial character;
 	private static final float CAM_DISTANCE_BEHIND_CHAR = 50;
@@ -56,13 +60,11 @@ public class Core extends SimpleApplication {
 	private GroundControl groundControl;
 	private boolean camBehindChar = false;
 	private NiftyJmeDisplay niftyDisplay;
-	boolean menu_active = false;
-
-	/**
-	 * 
-	 * @author danielwenzel, danielthevessen, fabiankessler, simonmichalke
-	 */
+	private boolean menu_active = false;
 	private EmbellishmentManager embi;
+
+	// test:
+	private CameraControl camControl;
 
 	@Override
 	public void simpleInitApp() {
@@ -95,7 +97,6 @@ public class Core extends SimpleApplication {
 				eastTex, northTex, southTex, upTex, downTex, normalScale);
 		rootNode.attachChild(skySpatial);
 
-
 		inputManager.setCursorVisible(false);// hides the cursor
 
 		niftyDisplay = new NiftyJmeDisplay(assetManager, inputManager,
@@ -112,110 +113,7 @@ public class Core extends SimpleApplication {
 		initKeys(ControlType.SPACECRAFT);
 
 	}
-
-	@Override
-	public void simpleUpdate(float tpf) {
-		if (!menu_active)
-			inputManager.setCursorVisible(false);// no cursor
-		else
-			inputManager.setCursorVisible(true);
-
-		Vector3f camvec = character.getLocalTranslation();
-		// Quaternion q, p;
-
-		if (camBehindChar) {
-
-			character.localToWorld(
-					new Vector3f(0, 0, -CAM_DISTANCE_BEHIND_CHAR), camvec);
-			// p = new Quaternion(0, 0, 1, +CAM_DISTANCE_BEHIND_CHAR); //-cam*
-			// or +cam* please test
-			// p.mult(character.getLocalRotation());
-			// q.addLocal(p);
-		}
-
-		cam.setLocation(camvec);
-		cam.setRotation(character.getLocalRotation());
-	}
-
-	public void switchCam() {
-		camBehindChar = !camBehindChar;
-	}
-
-	public void switchMenu() {
-		if (!menu_active) { // We have the choice, create an extra appstate for
-			// each
-			// kind of input or clear and reassign the keys
-			// every
-			// time
-			guiViewPort.addProcessor(niftyDisplay);
-			initKeys(ControlType.STANDARD_ONLY);
-		} else {
-			guiViewPort.removeProcessor(niftyDisplay);
-			initKeys(ControlType.SPACECRAFT);
-		}
-		menu_active = !menu_active;
-	}
-
-	private void initSpatials() {
-		Material mat_brick = new Material(assetManager,
-				"Common/MatDefs/Misc/Unshaded.j3md");
-		mat_brick.setTexture("ColorMap", assetManager
-				.loadTexture("Textures/Terrain/BrickWall/BrickWall.jpg"));
-		//Static:
 		
-		{//Carrier
-			Node carrierNode = (Node) assetManager
-					.loadModel("assets/Models/carrier.j3o");
-			carrierNode.setMaterial(mat_brick);
-			rootNode.attachChild(carrierNode);
-			carrierNode.setLocalTranslation(0, 0, 2500);
-			RigidBodyControl carrierControl = new RigidBodyControl(CollisionShapeFactory.createMeshShape(carrierNode),0f);
-			carrierNode.addControl(carrierControl);
-			bulletAppState.getPhysicsSpace().add(carrierControl);
-		}//\Carrier		
-		
-		//\Static
-		//Not-static:
-
-		{//Physics test Box
-			Spatial box = new Geometry("Box", new Box(new Vector3f(-2.5f, -2.5f,
-					-2.5f), new Vector3f(2.5f, 2.5f, 2.5f)));
-			box.setMaterial(mat_brick);
-			rootNode.attachChild(box);
-			box.setLocalTranslation(25f, -10f, 75f);
-			RigidBodyControl box_rbc = new RigidBodyControl(8f);
-			box.addControl(box_rbc);
-			bulletAppState.getPhysicsSpace().add(box_rbc);
-		}//\Physics test Box
-
-		{//Spaceships
-			Node standartReaper = (Node) assetManager
-					.loadModel("assets/Models/reaper_fertig.j3o");
-			CollisionShape collisionShape=CollisionShapeFactory.createDynamicMeshShape(standartReaper);
-			standartReaper.setMaterial(mat_brick);
-			{
-				Node spaceShip= standartReaper.clone(true);
-				rootNode.attachChild(spaceShip);
-				spaceControl = new ReaperControl(spaceShip, collisionShape, 6f);
-				spaceShip.addControl(spaceControl);
-				bulletAppState.getPhysicsSpace().add(spaceControl);
-
-				character = spaceShip;
-			}
-
-			{//dummy Space ship
-				Node spaceShip = standartReaper.clone(true);
-				rootNode.attachChild(spaceShip);
-				spaceShip.setLocalTranslation(0, 0, 100);
-				ReaperControl control=new ReaperControl(spaceShip, collisionShape, 6f);
-				spaceShip.addControl(control);
-				bulletAppState.getPhysicsSpace().add(control);
-				
-			}//\dummy Space ship
-		}
-
-	}
-
 	private void initKeys(ControlType controlType) {
 		inputManager.clearMappings();
 
@@ -255,7 +153,112 @@ public class Core extends SimpleApplication {
 
 	}
 
+	private void initSpatials() {
+		Material mat_brick = new Material(assetManager,
+				"Common/MatDefs/Misc/Unshaded.j3md");
+		mat_brick.setTexture("ColorMap", assetManager
+				.loadTexture("Textures/Terrain/BrickWall/BrickWall.jpg"));
+		DirectionalLight light= new DirectionalLight();
+		light.setDirection(Vector3f.UNIT_XYZ);
+		rootNode.addLight(light);
+		// Static:
+
+		{// Carrier
+			Node carrierNode = (Node) assetManager
+					.loadModel("assets/Models/carrier.j3o");
+			rootNode.attachChild(carrierNode);
+			
+			bulletAppState.getPhysicsSpace().addAll(carrierNode);
+			carrierNode.move(0, 0, 500);
+			System.out.println(carrierNode.getWorldTranslation());
+		}// \Carrier
+
+		// \Static
+		// Not-static:
+
+		{// Physics test Box
+			Spatial box = new Geometry("Box", new Box(new Vector3f(-2.5f,
+					-2.5f, -2.5f), new Vector3f(2.5f, 2.5f, 2.5f)));
+			box.setMaterial(mat_brick);
+			rootNode.attachChild(box);
+			box.setLocalTranslation(25f, -10f, 75f);
+			RigidBodyControl box_rbc = new RigidBodyControl(8f);
+			box.addControl(box_rbc);
+			bulletAppState.getPhysicsSpace().add(box_rbc);
+		}// \Physics test Box
+
+		{// Spaceships
+			Node standartReaper = (Node) assetManager
+					.loadModel("assets/Models/reaper_fertig.j3o");
+			CollisionShape collisionShape = CollisionShapeFactory
+					.createDynamicMeshShape(standartReaper);
+			standartReaper.setMaterial(mat_brick);
+			{
+				Node spaceShip = standartReaper.clone(true);
+				rootNode.attachChild(spaceShip);
+				spaceControl = new ReaperControl(spaceShip, collisionShape, 6f);
+				spaceShip.addControl(spaceControl);
+				bulletAppState.getPhysicsSpace().add(spaceControl);
+				camControl = new CameraControl(cam,
+						ControlDirection.SpatialToCamera);
+				camControl.setSpatial(spaceShip);
+				camControl.setEnabled(true);
+
+				// cam=camControl.getCamera();
+				character = spaceShip;
+			}
+
+			{// dummy Space ship
+				Node spaceShip = standartReaper.clone(true);
+				rootNode.attachChild(spaceShip);
+				spaceShip.setLocalTranslation(0, 0, 100);
+				ReaperControl control = new ReaperControl(spaceShip,
+						collisionShape, 6f);
+				spaceShip.addControl(control);
+				bulletAppState.getPhysicsSpace().add(control);
+
+			}// \dummy Space ship
+		}
+
+	}
+	
+	@Override
+	public void simpleRender(RenderManager rm) {
+		embi.updateRender();
+	}
+
+	@Override
+	public void simpleUpdate(float tpf) {
+//		if (camControl.getSpatial() != null)
+//			System.out.println("cam: "
+//					+ camControl.getSpatial().getWorldTranslation());
+//		System.out.println("rigid: " + character.getWorldTranslation());
+		camControl.update(tpf);
+//		System.out.println(cam.getLocation());
+		if (!menu_active)
+			inputManager.setCursorVisible(false);// no cursor
+		else
+			inputManager.setCursorVisible(true);
+
+		// Vector3f camvec = character.getLocalTranslation();
+		// // Quaternion q, p;
+		//
+		// if (camBehindChar) {
+		//
+		// character.localToWorld(
+		// new Vector3f(0, 0, -CAM_DISTANCE_BEHIND_CHAR), camvec);
+		// // p = new Quaternion(0, 0, 1, +CAM_DISTANCE_BEHIND_CHAR); //-cam*
+		// // or +cam* please test
+		// // p.mult(character.getLocalRotation());
+		// // q.addLocal(p);
+		// }
+		//
+		// cam.setLocation(camvec);
+		// cam.setRotation(character.getLocalRotation());
+	}	
+	
 	private void disectSettings(HashMap<String, String> controls,
+
 			List<String> actionKey, List<String> analogKey) {
 
 		for (String key : controls.keySet()) {
@@ -286,13 +289,30 @@ public class Core extends SimpleApplication {
 		}
 	}
 
-	@Override
-	public void simpleRender(RenderManager rm) {
-		embi.updateRender();
+	public BulletAppState getBulletAppState() {
+		return bulletAppState;
 	}
 
-	private enum ControlType {
-		SPACECRAFT, GROUND, MACHINE, STANDARD_ONLY
+	public void setBulletAppState(BulletAppState bulletAppState) {
+		this.bulletAppState = bulletAppState;
 	}
 
+	public void switchCam() {
+		camBehindChar = !camBehindChar;
+	}
+
+	public void switchMenu() {
+		if (!menu_active) { // We have the choice, create an extra appstate for
+			// each
+			// kind of input or clear and reassign the keys
+			// every
+			// time
+			guiViewPort.addProcessor(niftyDisplay);
+			initKeys(ControlType.STANDARD_ONLY);
+		} else {
+			guiViewPort.removeProcessor(niftyDisplay);
+			initKeys(ControlType.SPACECRAFT);
+		}
+		menu_active = !menu_active;
+	}
 }

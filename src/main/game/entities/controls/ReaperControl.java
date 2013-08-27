@@ -20,7 +20,7 @@ public class ReaperControl extends SpacecraftControl{
 	private static final float SENSITIVITY_X = 1.2f; // aka "pitch"
 	private static final float SENSITIVITY_Z = 1.2f; // aka "roll"
 	private static final float SENSITIVITY_Y = .5f; // aka "yaw"; very low, we want to increase difficulty ;-)
-	private static final float MAXIMUM_SPEED = 400;
+	private static final float MAXIMUM_SPEED = 100;
 	private float acceleration = 100;
 	private float currentspeed = 0;
 	private boolean accelerating = false;
@@ -104,8 +104,10 @@ public class ReaperControl extends SpacecraftControl{
 		if (accelerating && (currentspeed <= MAXIMUM_SPEED)) {
 			currentspeed += acceleration * tpf; // 5 m/s²
 		} else {
-			if (decelerating && (currentspeed >= -MAXIMUM_SPEED)) {
+			if (decelerating && (currentspeed >= 0)) {
 				currentspeed -= acceleration * tpf; // 5 m/s²
+				if(currentspeed<0)
+					currentspeed=0;
 			} else {
 				if (currentspeed > 0)
 					currentspeed -= 1.5 * tpf;
@@ -131,6 +133,8 @@ public class ReaperControl extends SpacecraftControl{
 		Quaternion oldOne = getPhysicsRotation();
 		Quaternion toRotate = new Quaternion(angles);
 		setPhysicsRotation(oldOne.mult(toRotate));
+		setAngularFactor(3f);
+		
 	}	
 
 	@Override

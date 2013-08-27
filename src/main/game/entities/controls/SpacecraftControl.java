@@ -12,7 +12,7 @@ public abstract class SpacecraftControl extends RigidBodyControl
 
 	public SpacecraftControl(Spatial spatial,CollisionShape shape, float mass) {
 		super(shape, mass);
-		this.setSpatial(spatial);
+//		this.setSpatial(spatial);
 	}
 	
 	public SpacecraftControl(Spatial spatial, float mass) {
