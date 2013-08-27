@@ -26,8 +26,8 @@ public class ExplosionView implements Embellishable{
 	
 	static String explosionpath = "Effects/Explosion/flame.png";
 	static String flashpath = "Effects/Explosion/flash.png";
-	static String shockwavepath = "assets/Effects/Shockwave4.png";
-	static String soundpath = "assets/Audio/Effects/110114__ryansnook__nuclear-explosion.wav";
+	static String shockwavepath = "Effects/Shockwave4.png";
+	static String soundpath = "Audio/Effects/110114__ryansnook__nuclear-explosion.wav";
 	
 	static final float strengthfactor = 0.025f;
 	
