@@ -7,15 +7,15 @@ import com.jme3.bullet.control.RigidBodyControl;
 
 import com.jme3.scene.Spatial;
 
-public abstract class SpacecraftControl extends RigidBodyControl 
+public abstract class SpacecraftControl extends RigidBodyControl
 		implements Explodable {
 
-	public SpacecraftControl(Spatial spatial,CollisionShape shape, float mass) {
+	public SpacecraftControl(CollisionShape shape, float mass) {
 		super(shape, mass);
 //		this.setSpatial(spatial);
 	}
-	
-	public SpacecraftControl(Spatial spatial, float mass) {
+
+	public SpacecraftControl(float mass) {
 		super(mass);
 	}
 

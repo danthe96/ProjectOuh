@@ -1,18 +1,26 @@
 package main.game.entities.controls;
 
 import com.jme3.bullet.collision.shapes.CollisionShape;
+import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.math.Quaternion;
 import com.jme3.scene.Spatial;
+import main.game.physics.Explodable;
 
-public class ReaperControl extends SpacecraftControl{
+/**
+ * the ReaperControl is a RigidBodyControl which controls collisions and
+ * movementoperations like yaw roll, pitch, accelerating and decelerating
+ * @author Febbe, not only me ;)
+ */
+public class ReaperControl extends SpacecraftControl
+		implements Explodable {
 
-	public ReaperControl(Spatial spatial, CollisionShape shape, float mass) {
-		super(spatial, shape, mass);
+	public ReaperControl(CollisionShape shape, float mass) {
+		super(shape, mass);
 		setKinematic(false);
 		// TODO Auto-generated constructor stub
 	}
-	public ReaperControl(Spatial spatial, float mass) {
-		super(spatial, mass);
+	public ReaperControl(float mass) {
+		super(mass);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -32,68 +40,68 @@ public class ReaperControl extends SpacecraftControl{
 	private float explosionStrength = 50;
 
 
-	@Override
+	//@Override
 	public void leftRotation(float value) {
 		//		System.out.println(value);
 		doRotation(new float[]{0f,0f,value*SENSITIVITY_Z});
 	}
 
-	@Override
+	//@Override
 	public void rightRotation(float value) {
 		doRotation(new float[]{0f,0f,-value*SENSITIVITY_Z});
 	}
 
-	@Override
+	//@Override
 	public void upRotation(float value) {
 		doRotation(new float[]{-value*SENSITIVITY_X,0f,0f});
 	}
 
-	@Override
+	//@Override
 	public void downRotation(float value) {
 		doRotation(new float[]{value*SENSITIVITY_X,0f,0f});
 	}
 
-	@Override
+	//@Override
 	public void yawRight() {
 		yawRight = !yawRight;
 	}
 
-	@Override
+	//@Override
 	public void yawLeft() {
-		yawLeft = !yawLeft;		
+		yawLeft = !yawLeft;
 	}
 
-	@Override
+	//@Override
 	public void accelerate() {
 		accelerating=!accelerating;
 	}
 
-	@Override
+	//@Override
 	public void decelerate() {
 		decelerating=!decelerating;
 	}
 
-	@Override
+	//@Override
 	public void land() {
 
 	}
 
-	@Override
+	//@Override
 	public void lift() {
 
 	}
 
-	@Override
+	//@Override
 	public void primaryShoot() {
 
 	}
 
-	@Override
+	//@Override
 	public void secondShoot() {
 
 	}
 
-	@Override
+	//@Override
 	public Spatial getSpatial() {
 		return spatial;
 	}
@@ -102,17 +110,20 @@ public class ReaperControl extends SpacecraftControl{
 	public void update(float tpf){  // tpf = 1/fps  in seconds
 
 		if (accelerating && (currentspeed <= MAXIMUM_SPEED)) {
-			currentspeed += acceleration * tpf; // 5 m/s²
+			currentspeed += acceleration * tpf; // 5 m/sï¿½
 		} else {
 			if (decelerating && (currentspeed >= 0)) {
-				currentspeed -= acceleration * tpf; // 5 m/s²
-				if(currentspeed<0)
+				currentspeed -= acceleration * tpf; // 5 m/sï¿½
+				if(currentspeed<0) {
 					currentspeed=0;
+				}
 			} else {
-				if (currentspeed > 0)
+				if (currentspeed > 0) {
 					currentspeed -= 1.5 * tpf;
-				else if (currentspeed < 0)
+				}
+				else if (currentspeed < 0) {
 					currentspeed += 1.5 * tpf;
+				}
 
 			}
 		}
@@ -134,8 +145,8 @@ public class ReaperControl extends SpacecraftControl{
 		Quaternion toRotate = new Quaternion(angles);
 		setPhysicsRotation(oldOne.mult(toRotate));
 		setAngularFactor(3f);
-		
-	}	
+
+	}
 
 	@Override
 	public float getExplosionStrength() {
@@ -154,9 +165,7 @@ public class ReaperControl extends SpacecraftControl{
 
 	@Override
 	public void setTriggered(boolean bvalue) {
-		isExploding = bvalue;		
+		isExploding = bvalue;
 	}
-
-
 
 }

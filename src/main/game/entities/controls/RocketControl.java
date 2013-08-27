@@ -1,6 +1,6 @@
 package main.game.entities.controls;
-import main.game.physics.Explodable;
 
+import main.game.physics.Explodable;
 
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.math.Quaternion;
@@ -22,8 +22,7 @@ import com.jme3.scene.control.AbstractControl;
  *
  */
 public class RocketControl extends AbstractControl{
-	
-	
+		
 	/**
 	 * Theres a small time between the hit of the rocket and the next update, when it will explode. Yet the time is long enough to call the collision multiple times, thus I have created this variable to prevent multiple triggering.
 	 */
@@ -129,7 +128,7 @@ public class RocketControl extends AbstractControl{
 		
 		
 		getSpatial().setLocalRotation(currentRotation);
-		Vector3f movement = new Vector3f();
+		Vector3f movement;
 		
 		movement = new Vector3f(0,0,1);
 		movement = movement.mult(speed*tpf);

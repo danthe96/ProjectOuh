@@ -27,6 +27,7 @@ import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
 import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.renderer.RenderManager;
+import com.jme3.scene.CameraNode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -37,21 +38,20 @@ import com.jme3.texture.Texture;
 import com.jme3.util.SkyFactory;
 
 import de.lessvoid.nifty.Nifty;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 /**
- * 
+ *
  * @author danielwenzel, danielthevessen, fabiankessler, simonmichalke
  */
-
 public class Core extends SimpleApplication {
+
 	private enum ControlType {
+
 		SPACECRAFT, GROUND, MACHINE, STANDARD_ONLY
 	}
-
 	private Settings settings;
-
 	private BulletAppState bulletAppState;
-
 	private HitManager hitManager;
 	// this is the body/machine, where you are inside, which you are playing
 	private Spatial character;
@@ -62,9 +62,8 @@ public class Core extends SimpleApplication {
 	private NiftyJmeDisplay niftyDisplay;
 	private boolean menu_active = false;
 	private EmbellishmentManager embi;
-
 	// test:
-	private CameraControl camControl;
+	private CameraNode camNode;
 
 	@Override
 	public void simpleInitApp() {
@@ -80,17 +79,17 @@ public class Core extends SimpleApplication {
 		settings = new Settings();
 
 		Texture northTex = assetManager
-				.loadTexture("assets/Textures/AlternativeSkybox/TestSky_back6.png");
+				.loadTexture("Textures/AlternativeSkybox/TestSky_back6.png");
 		Texture downTex = assetManager
-				.loadTexture("assets/Textures/AlternativeSkybox/TestSky_bottom4.png");
+				.loadTexture("Textures/AlternativeSkybox/TestSky_bottom4.png");
 		Texture southTex = assetManager
-				.loadTexture("assets/Textures/AlternativeSkybox/TestSky_front5.png");
+				.loadTexture("Textures/AlternativeSkybox/TestSky_front5.png");
 		Texture westTex = assetManager
-				.loadTexture("assets/Textures/AlternativeSkybox/TestSky_left2.png");
+				.loadTexture("Textures/AlternativeSkybox/TestSky_left2.png");
 		Texture eastTex = assetManager
-				.loadTexture("assets/Textures/AlternativeSkybox/TestSky_right1.png");
+				.loadTexture("Textures/AlternativeSkybox/TestSky_right1.png");
 		Texture upTex = assetManager
-				.loadTexture("assets/Textures/AlternativeSkybox/TestSky_top3.png");
+				.loadTexture("Textures/AlternativeSkybox/TestSky_top3.png");
 
 		final Vector3f normalScale = new Vector3f(-1, 1, 1);
 		Spatial skySpatial = SkyFactory.createSky(assetManager, westTex,
@@ -113,19 +112,20 @@ public class Core extends SimpleApplication {
 		initKeys(ControlType.SPACECRAFT);
 
 	}
-		
+
 	private void initKeys(ControlType controlType) {
 		inputManager.clearMappings();
 
-		List<String> actionKey = new ArrayList<String>();
-		List<String> analogKey = new ArrayList<String>();
+		List<String> actionKey = new ArrayList<>();
+		List<String> analogKey = new ArrayList<>();
 
-		if (controlType == ControlType.SPACECRAFT)
+		if (controlType == ControlType.SPACECRAFT) {
 			disectSettings(settings.getSettingsMap("SpacecraftControls"),
 					actionKey, analogKey);
-		else if (controlType == ControlType.GROUND)
+		} else if (controlType == ControlType.GROUND) {
 			disectSettings(settings.getSettingsMap("GroundControls"),
 					actionKey, analogKey);
+		}
 
 		if (controlType == ControlType.SPACECRAFT) {
 			SpacecraftListener spacecraftListener = new SpacecraftListener(
@@ -158,19 +158,17 @@ public class Core extends SimpleApplication {
 				"Common/MatDefs/Misc/Unshaded.j3md");
 		mat_brick.setTexture("ColorMap", assetManager
 				.loadTexture("Textures/Terrain/BrickWall/BrickWall.jpg"));
-		DirectionalLight light= new DirectionalLight();
+		DirectionalLight light = new DirectionalLight();
 		light.setDirection(Vector3f.UNIT_XYZ);
 		rootNode.addLight(light);
 		// Static:
 
 		{// Carrier
 			Node carrierNode = (Node) assetManager
-					.loadModel("assets/Models/carrier.j3o");
+					.loadModel("Models/carrier.j3o");
 			rootNode.attachChild(carrierNode);
-			
 			bulletAppState.getPhysicsSpace().addAll(carrierNode);
 			carrierNode.move(0, 0, 500);
-			System.out.println(carrierNode.getWorldTranslation());
 		}// \Carrier
 
 		// \Static
@@ -189,22 +187,26 @@ public class Core extends SimpleApplication {
 
 		{// Spaceships
 			Node standartReaper = (Node) assetManager
-					.loadModel("assets/Models/reaper_fertig.j3o");
+					.loadModel("Models/reaper_fertig.j3o");
 			CollisionShape collisionShape = CollisionShapeFactory
 					.createDynamicMeshShape(standartReaper);
 			standartReaper.setMaterial(mat_brick);
-			{
+			{    /** Explosion effect. Uses Texture from jme3-test-data library! */
+
+
 				Node spaceShip = standartReaper.clone(true);
 				rootNode.attachChild(spaceShip);
-				spaceControl = new ReaperControl(spaceShip, collisionShape, 6f);
+				spaceControl = new ReaperControl(collisionShape, 6f);
 				spaceShip.addControl(spaceControl);
-				bulletAppState.getPhysicsSpace().add(spaceControl);
-				camControl = new CameraControl(cam,
-						ControlDirection.SpatialToCamera);
-				camControl.setSpatial(spaceShip);
-				camControl.setEnabled(true);
+				bulletAppState.getPhysicsSpace().addAll(spaceShip);
+				//Init cams for spatials
+				CameraControl camControl = (CameraControl) spaceShip.getChild("Camera").getControl(0);
+				camControl.setCamera(cam);
+				camControl.setEnabled(false);
+				camControl = (CameraControl) spaceShip.getChild("Camera2").getControl(0);
+				camControl.setCamera(cam);
+				camControl.setEnabled(false);
 
-				// cam=camControl.getCamera();
 				character = spaceShip;
 			}
 
@@ -212,8 +214,7 @@ public class Core extends SimpleApplication {
 				Node spaceShip = standartReaper.clone(true);
 				rootNode.attachChild(spaceShip);
 				spaceShip.setLocalTranslation(0, 0, 100);
-				ReaperControl control = new ReaperControl(spaceShip,
-						collisionShape, 6f);
+				ReaperControl control = new ReaperControl(collisionShape, 6f);
 				spaceShip.addControl(control);
 				bulletAppState.getPhysicsSpace().add(control);
 
@@ -221,7 +222,7 @@ public class Core extends SimpleApplication {
 		}
 
 	}
-	
+
 	@Override
 	public void simpleRender(RenderManager rm) {
 		embi.updateRender();
@@ -229,16 +230,13 @@ public class Core extends SimpleApplication {
 
 	@Override
 	public void simpleUpdate(float tpf) {
-//		if (camControl.getSpatial() != null)
-//			System.out.println("cam: "
-//					+ camControl.getSpatial().getWorldTranslation());
-//		System.out.println("rigid: " + character.getWorldTranslation());
-		camControl.update(tpf);
-//		System.out.println(cam.getLocation());
-		if (!menu_active)
+
+		//camControl.update(tpf);
+		if (!menu_active) {
 			inputManager.setCursorVisible(false);// no cursor
-		else
+		} else {
 			inputManager.setCursorVisible(true);
+		}
 
 		// Vector3f camvec = character.getLocalTranslation();
 		// // Quaternion q, p;
@@ -255,10 +253,9 @@ public class Core extends SimpleApplication {
 		//
 		// cam.setLocation(camvec);
 		// cam.setRotation(character.getLocalRotation());
-	}	
-	
-	private void disectSettings(HashMap<String, String> controls,
+	}
 
+	private void disectSettings(HashMap<String, String> controls,
 			List<String> actionKey, List<String> analogKey) {
 
 		for (String key : controls.keySet()) {
@@ -268,22 +265,24 @@ public class Core extends SimpleApplication {
 						new KeyTrigger(Integer.parseInt(binding.substring(1))));
 				actionKey.add(key);
 			} else if (binding.charAt(0) == 'a') {
-				if (binding.charAt(1) == 't')
+				if (binding.charAt(1) == 't') {
 					inputManager.addMapping(
 							key,
 							new MouseAxisTrigger(Integer.parseInt(binding
-									.substring(2)), true));
-				if (binding.charAt(1) == 'f')
+							.substring(2)), true));
+				}
+				if (binding.charAt(1) == 'f') {
 					inputManager.addMapping(
 							key,
 							new MouseAxisTrigger(Integer.parseInt(binding
-									.substring(2)), false));
+							.substring(2)), false));
+				}
 				analogKey.add(key);
 			} else if (binding.charAt(0) == 'm') {
 				inputManager.addMapping(
 						key,
 						new MouseButtonTrigger(Integer.parseInt(binding
-								.substring(1))));
+						.substring(1))));
 				actionKey.add(key);
 			}
 		}
@@ -299,6 +298,8 @@ public class Core extends SimpleApplication {
 
 	public void switchCam() {
 		camBehindChar = !camBehindChar;
+			((CameraControl)((CameraNode)((Node)character).getChild("Camera")).getControl(0)).setEnabled(camBehindChar);
+			((CameraControl)((CameraNode)((Node)character).getChild("Camera2")).getControl(0)).setEnabled(!camBehindChar);
 	}
 
 	public void switchMenu() {
