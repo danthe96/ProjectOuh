@@ -25,8 +25,8 @@ public class ReaperControl extends SpacecraftControl
 	}
 
 	// see http://www.esparacing.com/sport_pilot/how%20to%20control%20an%20aircraft.htm
-	private static final float SENSITIVITY_X = 1.2f; // aka "pitch"
-	private static final float SENSITIVITY_Z = 1.2f; // aka "roll"
+	private static final float SENSITIVITY_X = 1.0f; // aka "pitch"
+	private static final float SENSITIVITY_Z = 1.0f; // aka "roll"
 	private static final float SENSITIVITY_Y = .5f; // aka "yaw"; very low, we want to increase difficulty ;-)
 	private static final float MAXIMUM_SPEED = 100;
 	private float acceleration = 100;

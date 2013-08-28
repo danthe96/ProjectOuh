@@ -6,6 +6,7 @@ import java.util.List;
 
 import main.Settings;
 import main.game.art.EmbellishmentManager;
+import main.game.entities.aiinput.ReaperAI;
 import main.game.entities.controls.GroundControl;
 import main.game.entities.controls.ReaperControl;
 import main.game.entities.controls.SpacecraftControl;
@@ -161,6 +162,9 @@ public class Core extends SimpleApplication {
 		DirectionalLight light = new DirectionalLight();
 		light.setDirection(Vector3f.UNIT_XYZ);
 		rootNode.addLight(light);
+		light = new DirectionalLight();
+		light.setDirection(Vector3f.UNIT_XYZ.negate());
+		rootNode.addLight(light);
 		// Static:
 
 		{// Carrier
@@ -190,7 +194,7 @@ public class Core extends SimpleApplication {
 					.loadModel("Models/reaper_fertig.j3o");
 			CollisionShape collisionShape = CollisionShapeFactory
 					.createDynamicMeshShape(standartReaper);
-			standartReaper.setMaterial(mat_brick);
+//			standartReaper.setMaterial(mat_brick);
 			{    /** Explosion effect. Uses Texture from jme3-test-data library! */
 
 
@@ -215,6 +219,7 @@ public class Core extends SimpleApplication {
 				rootNode.attachChild(spaceShip);
 				spaceShip.setLocalTranslation(0, 0, 100);
 				ReaperControl control = new ReaperControl(collisionShape, 6f);
+				spaceShip.addControl(new ReaperAI(control));
 				spaceShip.addControl(control);
 				bulletAppState.getPhysicsSpace().add(control);
 
