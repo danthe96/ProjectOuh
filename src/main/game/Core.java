@@ -170,6 +170,9 @@ public class Core extends SimpleApplication {
 		{// Carrier
 			Node carrierNode = (Node) assetManager
 					.loadModel("Models/carrier.j3o");
+//			Node carrierNode = (Node) assetManager
+//					.loadModel("Models/Taurus1.94 .j3o");
+			
 			rootNode.attachChild(carrierNode);
 			bulletAppState.getPhysicsSpace().addAll(carrierNode);
 			carrierNode.move(0, 0, 500);
@@ -190,10 +193,14 @@ public class Core extends SimpleApplication {
 		}// \Physics test Box
 
 		{// Spaceships
+//			Node standartReaper = (Node) assetManager
+//					.loadModel("Models/reaper_fertig.j3o");
 			Node standartReaper = (Node) assetManager
-					.loadModel("Models/reaper_fertig.j3o");
+					.loadModel("Models/Taurus1.94 .j3o");
+			System.out.println("Check one");
 			CollisionShape collisionShape = CollisionShapeFactory
 					.createDynamicMeshShape(standartReaper);
+			System.out.println("Check two");
 //			standartReaper.setMaterial(mat_brick);
 			{    /** Explosion effect. Uses Texture from jme3-test-data library! */
 
@@ -203,6 +210,7 @@ public class Core extends SimpleApplication {
 				spaceControl = new ReaperControl(collisionShape, 6f);
 				spaceShip.addControl(spaceControl);
 				bulletAppState.getPhysicsSpace().addAll(spaceShip);
+				System.out.println("Check 3");
 				//Init cams for spatials
 				CameraControl camControl = (CameraControl) spaceShip.getChild("Camera").getControl(0);
 				camControl.setCamera(cam);
@@ -224,6 +232,7 @@ public class Core extends SimpleApplication {
 				bulletAppState.getPhysicsSpace().add(control);
 
 			}// \dummy Space ship
+			System.out.println("Check 4");
 		}
 
 	}
@@ -235,6 +244,7 @@ public class Core extends SimpleApplication {
 
 	@Override
 	public void simpleUpdate(float tpf) {
+		System.out.println("Check 5");
 
 		//camControl.update(tpf);
 		if (!menu_active) {
