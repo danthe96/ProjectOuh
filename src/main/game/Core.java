@@ -193,10 +193,10 @@ public class Core extends SimpleApplication {
 		}// \Physics test Box
 
 		{// Spaceships
-//			Node standartReaper = (Node) assetManager
-//					.loadModel("Models/reaper_fertig.j3o");
 			Node standartReaper = (Node) assetManager
-					.loadModel("Models/Taurus1.94 .j3o");
+					.loadModel("Models/reaper_fertig.j3o");
+//			Node standartReaper = (Node) assetManager
+//					.loadModel("Models/Taurus1.94 .j3o");
 			System.out.println("Check one");
 			CollisionShape collisionShape = CollisionShapeFactory
 					.createDynamicMeshShape(standartReaper);
@@ -246,28 +246,11 @@ public class Core extends SimpleApplication {
 	public void simpleUpdate(float tpf) {
 		System.out.println("Check 5");
 
-		//camControl.update(tpf);
 		if (!menu_active) {
 			inputManager.setCursorVisible(false);// no cursor
 		} else {
 			inputManager.setCursorVisible(true);
 		}
-
-		// Vector3f camvec = character.getLocalTranslation();
-		// // Quaternion q, p;
-		//
-		// if (camBehindChar) {
-		//
-		// character.localToWorld(
-		// new Vector3f(0, 0, -CAM_DISTANCE_BEHIND_CHAR), camvec);
-		// // p = new Quaternion(0, 0, 1, +CAM_DISTANCE_BEHIND_CHAR); //-cam*
-		// // or +cam* please test
-		// // p.mult(character.getLocalRotation());
-		// // q.addLocal(p);
-		// }
-		//
-		// cam.setLocation(camvec);
-		// cam.setRotation(character.getLocalRotation());
 	}
 
 	private void disectSettings(HashMap<String, String> controls,
@@ -318,11 +301,7 @@ public class Core extends SimpleApplication {
 	}
 
 	public void switchMenu() {
-		if (!menu_active) { // We have the choice, create an extra appstate for
-			// each
-			// kind of input or clear and reassign the keys
-			// every
-			// time
+		if (!menu_active) { 
 			guiViewPort.addProcessor(niftyDisplay);
 			initKeys(ControlType.STANDARD_ONLY);
 		} else {

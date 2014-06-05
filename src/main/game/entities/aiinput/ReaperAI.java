@@ -22,14 +22,6 @@ public class ReaperAI implements Control{
 	}
 
 	@Override
-	public void write(JmeExporter ex) throws IOException {
-	}
-
-	@Override
-	public void read(JmeImporter im) throws IOException {
-	}
-
-	@Override
 	public Control cloneForSpatial(Spatial spatial) {
 		ReaperAI rA=new ReaperAI();
 		rA.setSpatial(spatial);
@@ -56,5 +48,12 @@ public class ReaperAI implements Control{
 	}
 
 
+	@Override
+	public void write(JmeExporter ex) throws IOException {
+	}
+
+	@Override
+	public void read(JmeImporter im) throws IOException {
+	}
 
 }
